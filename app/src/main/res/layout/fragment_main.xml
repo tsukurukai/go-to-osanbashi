@@ -19,5 +19,13 @@
         android:text="hoge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:id="@+id/hoge"/>
+
+    <TextView
+        android:text="fuga"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:id="@+id/fuga"/>
 </LinearLayout>
