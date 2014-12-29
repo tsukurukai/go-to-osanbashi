@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -26,7 +29,7 @@ import java.util.Set;
 import tsukurukai.gotoosanbashi.R;
 import tsukurukai.gotoosanbashi.models.Spot;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends ActionBarActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private List<Spot> spots;
@@ -44,6 +47,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         final Button button1 = (Button)findViewById(R.id.course_1);
         final Button button2 = (Button)findViewById(R.id.course_2);
@@ -90,6 +95,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 button2.setTextColor(getResources().getColor(R.color.text_color_black_87));
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == android.R.id.home) {
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
