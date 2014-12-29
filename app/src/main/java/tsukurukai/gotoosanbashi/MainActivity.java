@@ -1,5 +1,6 @@
 package tsukurukai.gotoosanbashi;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+import android.widget.TextView;
+
+import tsukurukai.gotoosanbashi.activities.MapsActivity;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -60,6 +64,14 @@ public class MainActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            final TextView textView = (TextView)rootView.findViewById(R.id.link_map);
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = MapsActivity.createIntent(getActivity());
+                    startActivity(intent);
+                }
+            });
             return rootView;
         }
     }
