@@ -134,23 +134,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void setUpMap() {
         mMap.setMyLocationEnabled(true);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(35.469561, 139.599325), 10));
+    }
+
+    private void addMarker() {
         for (Spot spot: spots) {
             mMap.addMarker(new MarkerOptions().position(new LatLng(spot.getLat(), spot.getLon())).title(spot.getName()));
         }
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
+    private void addPolyLine(GoogleMap googleMap) {
         PolylineOptions polyLine = new PolylineOptions();
-
         for (Spot spot: spots) {
             polyLine.geodesic(true).add(new LatLng(spot.getLat(), spot.getLon()));
         }
-
-        googleMap.clear();
-        for (Spot spot: spots) {
-            mMap.addMarker(new MarkerOptions().position(new LatLng(spot.getLat(), spot.getLon())).title(spot.getName()));
-        }
         googleMap.addPolyline(polyLine);
     }
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        googleMap.clear();
+        addMarker();
+        addPolyLine(googleMap);
+    }
+
+
 }
