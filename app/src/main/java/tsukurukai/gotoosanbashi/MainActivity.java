@@ -83,21 +83,23 @@ public class MainActivity extends ActionBarActivity {
                     spots.add(new Spot("ズーラシア", 35.496483, 139.525851));
 
                     Spot goal = new Spot("大桟橋", 35.451762, 139.647758);
-                    List<Spot> course = CourseCalculator.calculate(spots, 3, goal);
-                    course.add(goal);
-
                     SharedPreferences sharedPreferences = getActivity().getSharedPreferences("data", getActivity().MODE_PRIVATE);
-                    for (int i = 0; i < course.size(); i++) {
+
+                    for (int i = 0; i < 3; i++) {
+                        List<Spot> course = CourseCalculator.calculate(spots, 3, goal);
+                        course.add(goal);
+
+                        for (int j = 0; j < course.size(); j++) {
+                            sharedPreferences
+                                    .edit()
+                                    .putString("course:" + i + ":spots:" + j, course.get(j).toJson())
+                                    .apply();
+                        }
                         sharedPreferences
                                 .edit()
-                                .putString("spots:"+i, course.get(i).toJson())
-                                .apply();
+                                .putInt("course:" + i + ":spotsCount", course.size())
+                                .commit();
                     }
-                    sharedPreferences
-                            .edit()
-                            .putInt("spotsCount", course.size())
-                            .commit();
-
                     Intent intent = MapsActivity.createIntent(getActivity());
                     startActivity(intent);
                 }
