@@ -29,6 +29,9 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +44,8 @@ import static java.lang.Double.valueOf;
 
 
 public class MainActivity extends FragmentActivity {
+
+    private static final Integer NUMBER_OF_SPOTS = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,9 +110,9 @@ public class MainActivity extends FragmentActivity {
                             new AsyncTask<Void, Void, Void>() {
                                 @Override
                                 protected Void doInBackground(Void... params) {
-                                    ArrayList<Spot> spots = getPlaces();
+                                    ArrayList<Spot> spots = getSpots(location);
                                     Spot start = new Spot("現在地", location.getLatitude(), location.getLongitude());
-                                    Spot goal = new Spot("大桟橋", 35.451762, 139.647758);
+                                    Spot goal  = new Spot(Const.GOAL_NAME, Const.GOAL_LATITUDE, Const.GOAL_LONGITUDE);
 
                                     SharedPreferences sharedPreferences = getActivity().getSharedPreferences("data", getActivity().MODE_PRIVATE);
 
@@ -160,39 +165,52 @@ public class MainActivity extends FragmentActivity {
             return rootView;
         }
 
-        private ArrayList<Spot> getPlaces() {
-            //String uri = "http://techbooster.org/feed/";
+        private ArrayList<Spot> getSpots(Location location) {
+            ArrayList<Spot> spots = new ArrayList<Spot>();
+
             String baseUri  = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
             String key      = "key=" + Secret.GOOGLE_PLACES_API_KEY;
-            String location = "&location=35.454721,139.631666";
-            String types    = "&types=food";
-            String radius   = "&radius=500";
+            String types    = "amusement_park|aquarium|food|museum|park|spa|zoo";
+            String radius   = "&radius=3000";
             String sensor   = "&sensor=false";
-            String uri = baseUri + key + location + radius + types + sensor;
-            HttpGet request = new HttpGet(uri);
-            HttpResponse httpResponse;
-            HttpClient httpClient = new DefaultHttpClient();
-            ArrayList<Spot> spots = new ArrayList<Spot>();
+            String uri = baseUri + key + radius + sensor;
             try {
-                httpResponse = httpClient.execute(request);
-                int status = httpResponse.getStatusLine().getStatusCode();
-                if (HttpStatus.SC_OK == status) {
-                    JSONObject json = new JSONObject(EntityUtils.toString(httpResponse.getEntity()));
-                    JSONArray results = json.getJSONArray("results");
-                    for (int i = 0; i < results.length(); i++) {
-                        JSONObject jsonObject = results.getJSONObject(i);
-                        spots.add(new Spot(jsonObject.getString("name"),
-                                valueOf(jsonObject.getJSONObject("geometry").getJSONObject("location").getString("lat")),
-                                valueOf(jsonObject.getJSONObject("geometry").getJSONObject("location").getString("lng"))));
-                        Log.d("json_name", jsonObject.getString("name"));
-                        Log.d("json_latitude", jsonObject.getJSONObject("geometry").getJSONObject("location").getString("lat"));
-                        Log.d("json_longitude", jsonObject.getJSONObject("geometry").getJSONObject("location").getString("lng"));
-                    }
-                } else {
-                    Log.d("HttpStatus", "Status" + status);
-                }
-            } catch ( Exception e) {
+                uri += "&types=" + URLEncoder.encode(types, "utf-8");
+            } catch (UnsupportedEncodingException e) {
                 throw new RuntimeException(e);
+            }
+
+            Double currentLat = location.getLatitude();
+            Double currentLng = location.getLongitude();
+            Double goalLat = Const.GOAL_LATITUDE;
+            Double goalLng = Const.GOAL_LONGITUDE;
+
+            for (int i = 1; i < NUMBER_OF_SPOTS ; i++) {
+                Double spotLat = currentLat * i / NUMBER_OF_SPOTS + goalLat * (NUMBER_OF_SPOTS - i) / NUMBER_OF_SPOTS;
+                Double spotLng = currentLng * i / NUMBER_OF_SPOTS + goalLng * (NUMBER_OF_SPOTS - i) / NUMBER_OF_SPOTS;
+                String spotUri = uri + "&location=" + String.valueOf(spotLat) + "," + String.valueOf(spotLng);
+                Log.d("spotURI", "spotURI:" + spotUri);
+                HttpGet request = new HttpGet(spotUri);
+                HttpResponse httpResponse;
+                HttpClient httpClient = new DefaultHttpClient();
+                try {
+                    httpResponse = httpClient.execute(request);
+                    int status = httpResponse.getStatusLine().getStatusCode();
+                    if (HttpStatus.SC_OK == status) {
+                        JSONObject json = new JSONObject(EntityUtils.toString(httpResponse.getEntity()));
+                        JSONArray results = json.getJSONArray("results");
+                        for (int j = 0; j < results.length(); j++) {
+                            JSONObject jsonObject = results.getJSONObject(j);
+                            spots.add(new Spot(jsonObject.getString("name"),
+                                    valueOf(jsonObject.getJSONObject("geometry").getJSONObject("location").getString("lat")),
+                                    valueOf(jsonObject.getJSONObject("geometry").getJSONObject("location").getString("lng"))));
+                        }
+                    } else {
+                        Log.d("HttpStatus", "Status" + status);
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
             return spots;
         }
