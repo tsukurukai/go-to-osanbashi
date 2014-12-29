@@ -18,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -29,7 +28,6 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -139,57 +137,6 @@ public class MainActivity extends ActionBarActivity {
                                     startActivity(intent);
                                 }
                             }.execute();
-                        }
-
-                        @Override
-                        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                        }
-
-                        @Override
-                        public void onProviderEnabled(String provider) {
-
-                        }
-
-                        @Override
-                        public void onProviderDisabled(String provider) {
-
-                        }
-                    });
-                }
-            });
-
-            final TextView hogeView = (TextView)rootView.findViewById(R.id.hoge);
-            hogeView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ArrayList<Spot> spots = new ArrayList<Spot>();
-                    spots.add(new Spot("大桟橋", 35.451762, 139.647758));
-                    spots.add(new Spot("ランドマークタワー", 35.454721, 139.631666));
-                    spots.add(new Spot("青葉台", 35.542955, 139.517182));
-                    spots.add(new Spot("十日市場", 35.526302, 139.516584));
-                    spots.add(new Spot("ズーラシア", 35.496483, 139.525851));
-                    spots.add(new Spot("山下公園", 35.445877, 139.649554));
-                    spots.add(new Spot("四季の森公園", 35.505727, 139.536819));
-                    spots.add(new Spot("八景島シーパラダイス", 35.337158, 139.645770));
-
-                    List<Spot> course = CourseCalculator.calculate(spots, 3, new Spot("渋谷", 35.664035, 139.698212), new Spot("大桟橋", 35.451762, 139.647758));
-                    for (Spot s : course) {
-                        Log.d("TAG", s.toJson());
-                    }
-                }
-            });
-
-            final TextView fugaView = (TextView)rootView.findViewById(R.id.fuga);
-            fugaView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    currentLocationExecute(new LocationListener() {
-                        @Override
-                        public void onLocationChanged(Location location) {
-                            final double lat = location.getLatitude();
-                            final double lon = location.getLongitude();
-                            Toast.makeText(getActivity(), "lat: " + lat + ", lon: " + lon, Toast.LENGTH_LONG).show();
                         }
 
                         @Override
