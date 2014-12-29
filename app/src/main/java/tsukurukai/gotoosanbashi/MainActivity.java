@@ -13,7 +13,11 @@ import android.view.ViewGroup;
 import android.os.Build;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import tsukurukai.gotoosanbashi.activities.MapsActivity;
+import tsukurukai.gotoosanbashi.models.Spot;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -68,7 +72,11 @@ public class MainActivity extends ActionBarActivity {
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = MapsActivity.createIntent(getActivity());
+                    ArrayList<Spot> spots = new ArrayList<Spot>();
+                    spots.add(new Spot("大桟橋", 35.451762, 139.647758));
+                    spots.add(new Spot("ランドマークタワー", 35.454721, 139.631666));
+
+                    Intent intent = MapsActivity.createIntent(getActivity(), spots);
                     startActivity(intent);
                 }
             });
