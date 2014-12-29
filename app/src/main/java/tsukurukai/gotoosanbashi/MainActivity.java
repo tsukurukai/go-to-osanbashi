@@ -1,20 +1,20 @@
 package tsukurukai.gotoosanbashi;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import tsukurukai.gotoosanbashi.activities.MapsActivity;
 import tsukurukai.gotoosanbashi.models.Spot;
@@ -76,7 +76,17 @@ public class MainActivity extends ActionBarActivity {
                     spots.add(new Spot("大桟橋", 35.451762, 139.647758));
                     spots.add(new Spot("ランドマークタワー", 35.454721, 139.631666));
 
-                    Intent intent = MapsActivity.createIntent(getActivity(), spots);
+                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences("data", getActivity().MODE_PRIVATE);
+                    Set<String> spotJsons = new HashSet<String>();
+                    for (Spot s : spots) {
+                        spotJsons.add(s.toJson());
+                    }
+                    sharedPreferences
+                            .edit()
+                            .putStringSet("spots", spotJsons)
+                            .commit();
+
+                    Intent intent = MapsActivity.createIntent(getActivity());
                     startActivity(intent);
                 }
             });

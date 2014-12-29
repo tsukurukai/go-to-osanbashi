@@ -2,9 +2,9 @@ package tsukurukai.gotoosanbashi.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.FragmentActivity;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -12,7 +12,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import tsukurukai.gotoosanbashi.R;
 import tsukurukai.gotoosanbashi.models.Spot;
@@ -22,9 +24,8 @@ public class MapsActivity extends FragmentActivity {
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private List<Spot> spots;
 
-    public static Intent createIntent(Context context, ArrayList<Spot> spots) {
+    public static Intent createIntent(Context context) {
         Intent intent = new Intent(context, MapsActivity.class);
-        intent.putExtra("spots", spots);
         return intent;
     }
 
@@ -32,8 +33,12 @@ public class MapsActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        spots = getIntent().getParcelableArrayListExtra("spots");
-        if (spots == null) spots = new ArrayList<>();
+        spots = new ArrayList<>();
+        SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
+        Set<String> spotJsons = sharedPreferences.getStringSet("spots", new HashSet<String>());
+        for (String json : spotJsons) {
+            spots.add(Spot.fromJson(json));
+        }
 
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();

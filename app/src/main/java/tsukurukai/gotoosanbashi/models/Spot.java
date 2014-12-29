@@ -3,11 +3,26 @@ package tsukurukai.gotoosanbashi.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Spot implements Parcelable {
 
     private String name;
     private double lat;
     private double lon;
+
+    public static Spot fromJson(String json) {
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            return new Spot(
+                    jsonObject.getString("name"),
+                    jsonObject.getDouble("lat"),
+                    jsonObject.getDouble("lon"));
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public Spot(String name, double lat, double lon) {
         this.name = name;
@@ -25,6 +40,18 @@ public class Spot implements Parcelable {
 
     public double getLon() {
         return lon;
+    }
+
+    public String toJson() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("name", name);
+            jsonObject.put("lat", lat);
+            jsonObject.put("lon", lon);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        return jsonObject.toString();
     }
 
     @Override
