@@ -1,32 +1,41 @@
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-    <Button
-        android:id="@+id/course_1"
-        android:layout_width="wrap_content"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/course_1"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true">
-    </Button>
-    <Button
-        android:id="@+id/course_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/course_2"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/course_1"
-        android:layout_toLeftOf="@+id/course_3">
-    </Button>
-    <Button
-        android:id="@+id/course_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/course_3"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true">
-    </Button>
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/course_1"
+            android:background="@drawable/course_button_selected"
+            android:textColor="#fff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:text="@string/course_1">
+        </Button>
+        <Button
+            android:id="@+id/course_2"
+            android:background="@drawable/course_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:text="@string/course_2">
+        </Button>
+        <Button
+            android:id="@+id/course_3"
+            android:background="@drawable/course_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:text="@string/course_3">
+        </Button>
+    </LinearLayout>
 
     <fragment
         xmlns:tools="http://schemas.android.com/tools"
@@ -37,4 +46,4 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_below="@+id/course_1">
     </fragment>
-</RelativeLayout>
+</LinearLayout>

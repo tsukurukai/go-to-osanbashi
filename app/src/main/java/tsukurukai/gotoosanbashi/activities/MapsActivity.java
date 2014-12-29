@@ -45,30 +45,49 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
 
-        Button button1 = (Button)findViewById(R.id.course_1);
+        final Button button1 = (Button)findViewById(R.id.course_1);
+        final Button button2 = (Button)findViewById(R.id.course_2);
+        final Button button3 = (Button)findViewById(R.id.course_3);
+
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addCourse(0);
                 setUpMapIfNeeded();
+                button1.setBackground(getResources().getDrawable(R.drawable.course_button_selected));
+                button1.setTextColor(getResources().getColor(R.color.white));
+                button2.setBackground(getResources().getDrawable(R.drawable.course_button));
+                button2.setTextColor(getResources().getColor(R.color.text_color_black_87));
+                button3.setBackground(getResources().getDrawable(R.drawable.course_button));
+                button3.setTextColor(getResources().getColor(R.color.text_color_black_87));
             }
         });
 
-        Button button2 = (Button)findViewById(R.id.course_2);
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addCourse(1);
                 setUpMapIfNeeded();
+                button2.setBackground(getResources().getDrawable(R.drawable.course_button_selected));
+                button2.setTextColor(getResources().getColor(R.color.white));
+                button1.setBackground(getResources().getDrawable(R.drawable.course_button));
+                button1.setTextColor(getResources().getColor(R.color.text_color_black_87));
+                button3.setBackground(getResources().getDrawable(R.drawable.course_button));
+                button3.setTextColor(getResources().getColor(R.color.text_color_black_87));
             }
         });
 
-        Button button3 = (Button)findViewById(R.id.course_3);
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addCourse(2);
                 setUpMapIfNeeded();
+                button3.setBackground(getResources().getDrawable(R.drawable.course_button_selected));
+                button3.setTextColor(getResources().getColor(R.color.white));
+                button1.setBackground(getResources().getDrawable(R.drawable.course_button));
+                button1.setTextColor(getResources().getColor(R.color.text_color_black_87));
+                button2.setBackground(getResources().getDrawable(R.drawable.course_button));
+                button2.setTextColor(getResources().getColor(R.color.text_color_black_87));
             }
         });
     }
