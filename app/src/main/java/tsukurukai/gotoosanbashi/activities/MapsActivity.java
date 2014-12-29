@@ -6,10 +6,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,7 +23,7 @@ import java.util.Set;
 import tsukurukai.gotoosanbashi.R;
 import tsukurukai.gotoosanbashi.models.Spot;
 
-public class MapsActivity extends FragmentActivity {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private List<Spot> spots;
@@ -42,6 +46,11 @@ public class MapsActivity extends FragmentActivity {
 
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
+
+        mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+                .getMap();
+
+
     }
 
     @Override
@@ -76,6 +85,8 @@ public class MapsActivity extends FragmentActivity {
                 setUpMap();
             }
         }
+        SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
     /**
@@ -88,5 +99,15 @@ public class MapsActivity extends FragmentActivity {
         for (Spot spot: spots) {
             mMap.addMarker(new MarkerOptions().position(new LatLng(spot.getLat(), spot.getLon())).title(spot.getName()));
         }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        PolylineOptions polyLine = new PolylineOptions();
+
+        for (Spot spot: spots) {
+            polyLine.geodesic(true).add(new LatLng(spot.getLat(), spot.getLon()));
+        }
+        googleMap.addPolyline(polyLine);
     }
 }
