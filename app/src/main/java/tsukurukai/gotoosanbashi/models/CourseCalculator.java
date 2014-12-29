@@ -9,10 +9,12 @@ import java.util.Comparator;
 import java.util.List;
 
 public class CourseCalculator {
-    public static List<Spot> calculate(List<Spot> spots, int n, Spot goal) {
+    public static List<Spot> calculate(List<Spot> spots, int n, Spot start, Spot goal) {
         if (spots.size() < n) throw new IllegalArgumentException("spots size is less than n. [size=" + spots.size() + ", n=" + n);
 
         List<Pair<Integer, Spot>> selectedSpot = new ArrayList<>(n);
+        selectedSpot.add(Pair.create(Integer.MAX_VALUE, start));
+
         List<Spot> copyList = new ArrayList<>(spots);
         for (int i = 0; i < n; i++) {
             int j = (int) (Math.random() * (spots.size() - i));
@@ -20,6 +22,7 @@ public class CourseCalculator {
             selectedSpot.add(Pair.create(getDistance(s, goal), s));
             copyList.set(j, copyList.get(spots.size() - i - 1));
         }
+        selectedSpot.add(Pair.create(0, goal));
 
         Collections.sort(selectedSpot, new Comparator<Pair<Integer, Spot>>() {
             @Override
