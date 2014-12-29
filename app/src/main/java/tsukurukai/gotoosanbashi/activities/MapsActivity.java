@@ -39,9 +39,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         spots = new ArrayList<>();
         SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
-        Set<String> spotJsons = sharedPreferences.getStringSet("spots", new HashSet<String>());
-        for (String json : spotJsons) {
-            spots.add(Spot.fromJson(json));
+        int spotsCount = sharedPreferences.getInt("spotsCount", 0);
+        for (int i = 0; i < spotsCount; i++) {
+            spots.add(Spot.fromJson(sharedPreferences.getString("spots:" + i, "")));
         }
 
         setContentView(R.layout.activity_maps);
@@ -49,8 +49,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                 .getMap();
-
-
     }
 
     @Override

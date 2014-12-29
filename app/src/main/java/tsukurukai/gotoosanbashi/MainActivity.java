@@ -77,17 +77,25 @@ public class MainActivity extends ActionBarActivity {
                 @Override
                 public void onClick(View v) {
                     ArrayList<Spot> spots = new ArrayList<Spot>();
-                    spots.add(new Spot("大桟橋", 35.451762, 139.647758));
                     spots.add(new Spot("ランドマークタワー", 35.454721, 139.631666));
+                    spots.add(new Spot("青葉台", 35.542955, 139.517182));
+                    spots.add(new Spot("十日市場", 35.526302, 139.516584));
+                    spots.add(new Spot("ズーラシア", 35.496483, 139.525851));
+
+                    Spot goal = new Spot("大桟橋", 35.451762, 139.647758);
+                    List<Spot> course = CourseCalculator.calculate(spots, 3, goal);
+                    course.add(goal);
 
                     SharedPreferences sharedPreferences = getActivity().getSharedPreferences("data", getActivity().MODE_PRIVATE);
-                    Set<String> spotJsons = new HashSet<String>();
-                    for (Spot s : spots) {
-                        spotJsons.add(s.toJson());
+                    for (int i = 0; i < course.size(); i++) {
+                        sharedPreferences
+                                .edit()
+                                .putString("spots:"+i, course.get(i).toJson())
+                                .apply();
                     }
                     sharedPreferences
                             .edit()
-                            .putStringSet("spots", spotJsons)
+                            .putInt("spotsCount", course.size())
                             .commit();
 
                     Intent intent = MapsActivity.createIntent(getActivity());

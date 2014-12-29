@@ -19,22 +19,23 @@ public class Spot {
     public static Spot fromJson(String json) {
         try {
             JSONObject jsonObject = new JSONObject(json);
-            JSONArray jsonArray = jsonObject.getJSONArray("types");
-            String[] types = new String[jsonArray.length()];
-            for (int i = 0; i < jsonArray.length(); i++) {
-                types[i] = jsonArray.getString(i);
-            }
-            return new Spot(
-                    jsonObject.getString("formattedAddress")
-                    ,jsonObject.getDouble("lat")
-                    ,jsonObject.getDouble("lon")
-                    ,jsonObject.getString("icon")
-                    ,jsonObject.getString("id")
-                    ,jsonObject.getString("name")
-                    ,jsonObject.getDouble("rating")
-                    ,jsonObject.getString("reference")
-                    ,types
-            );
+//            JSONArray jsonArray = jsonObject.getJSONArray("types");
+//            String[] types = new String[jsonArray.length()];
+//            for (int i = 0; i < jsonArray.length(); i++) {
+//                types[i] = jsonArray.getString(i);
+//            }
+//            return new Spot(
+//                    jsonObject.getString("formattedAddress")
+//                    ,jsonObject.getDouble("lat")
+//                    ,jsonObject.getDouble("lon")
+//                    ,jsonObject.getString("icon")
+//                    ,jsonObject.getString("id")
+//                    ,jsonObject.getString("name")
+//                    ,jsonObject.getDouble("rating")
+//                    ,jsonObject.getString("reference")
+//                    ,types
+//            );
+            return new Spot(jsonObject.getString("name"), jsonObject.getDouble("lat"), jsonObject.getDouble("lon"));
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
