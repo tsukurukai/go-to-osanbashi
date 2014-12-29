@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tsukurukai.gotoosanbashi.activities.MapsActivity;
+import tsukurukai.gotoosanbashi.fragments.LoadingDialogFragment;
 import tsukurukai.gotoosanbashi.models.CourseCalculator;
 import tsukurukai.gotoosanbashi.models.Spot;
 
@@ -80,6 +81,11 @@ public class MainActivity extends ActionBarActivity {
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    final LoadingDialogFragment loadingDialogFragment = LoadingDialogFragment.newInstance();
+                    if (loadingDialogFragment.getDialog() == null || !loadingDialogFragment.getDialog().isShowing()) {
+                        loadingDialogFragment.show(getActivity().getFragmentManager(), "loadingDialog");
+                    }
+
                     currentLocationExecute(new LocationListener() {
                         @Override
                         public void onLocationChanged(Location location) {
@@ -109,6 +115,9 @@ public class MainActivity extends ActionBarActivity {
                                         .edit()
                                         .putInt("course:" + i + ":spotsCount", course.size())
                                         .commit();
+                            }
+                            if (loadingDialogFragment != null && loadingDialogFragment.getDialog() != null) {
+                                loadingDialogFragment.getDialog().dismiss();
                             }
                             Intent intent = MapsActivity.createIntent(getActivity());
                             startActivity(intent);
