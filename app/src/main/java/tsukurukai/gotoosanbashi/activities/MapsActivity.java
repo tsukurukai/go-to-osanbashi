@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -47,6 +49,50 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
+
+        Button button1 = (Button)findViewById(R.id.course_1);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                spots = new ArrayList<>();
+                SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
+                int spotsCount = sharedPreferences.getInt("course:0:spotsCount", 0);
+                for (int i = 0; i < spotsCount; i++) {
+                    spots.add(Spot.fromJson(sharedPreferences.getString("course:0:spots:" + i, "")));
+                }
+                setUpMapIfNeeded();
+            }
+        });
+
+
+        Button button2 = (Button)findViewById(R.id.course_2);
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                spots = new ArrayList<>();
+                SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
+                int spotsCount = sharedPreferences.getInt("course:1:spotsCount", 0);
+                for (int i = 0; i < spotsCount; i++) {
+                    spots.add(Spot.fromJson(sharedPreferences.getString("course:1:spots:" + i, "")));
+                }
+                setUpMapIfNeeded();
+            }
+        });
+
+
+        Button button3 = (Button)findViewById(R.id.course_3);
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                spots = new ArrayList<>();
+                SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
+                int spotsCount = sharedPreferences.getInt("course:2:spotsCount", 0);
+                for (int i = 0; i < spotsCount; i++) {
+                    spots.add(Spot.fromJson(sharedPreferences.getString("course:2:spots:" + i, "")));
+                }
+                setUpMapIfNeeded();
+            }
+        });
     }
 
     @Override
@@ -98,6 +144,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         for (Spot spot: spots) {
             polyLine.geodesic(true).add(new LatLng(spot.getLat(), spot.getLon()));
+        }
+
+        googleMap.clear();
+        for (Spot spot: spots) {
+            mMap.addMarker(new MarkerOptions().position(new LatLng(spot.getLat(), spot.getLon())).title(spot.getName()));
         }
         googleMap.addPolyline(polyLine);
     }
