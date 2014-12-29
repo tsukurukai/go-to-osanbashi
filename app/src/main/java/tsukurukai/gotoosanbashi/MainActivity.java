@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,9 +15,11 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import tsukurukai.gotoosanbashi.activities.MapsActivity;
+import tsukurukai.gotoosanbashi.models.CourseCalculator;
 import tsukurukai.gotoosanbashi.models.Spot;
 
 
@@ -31,6 +34,7 @@ public class MainActivity extends ActionBarActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+
     }
 
 
@@ -88,6 +92,24 @@ public class MainActivity extends ActionBarActivity {
 
                     Intent intent = MapsActivity.createIntent(getActivity());
                     startActivity(intent);
+                }
+            });
+
+            final TextView hogeView = (TextView)rootView.findViewById(R.id.hoge);
+            hogeView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ArrayList<Spot> spots = new ArrayList<Spot>();
+                    spots.add(new Spot("大桟橋", 35.451762, 139.647758));
+                    spots.add(new Spot("ランドマークタワー", 35.454721, 139.631666));
+                    spots.add(new Spot("青葉台", 35.542955, 139.517182));
+                    spots.add(new Spot("十日市場", 35.538908, 138.887492));
+                    spots.add(new Spot("ズーラシア", 31.065960, 76.270864));
+
+                    List<Spot> course = CourseCalculator.calculate(spots, 3, new Spot("大桟橋", 35.451762, 139.647758));
+                    for (Spot s : course) {
+                        Log.d("TAG", s.toJson());
+                    }
                 }
             });
             return rootView;
