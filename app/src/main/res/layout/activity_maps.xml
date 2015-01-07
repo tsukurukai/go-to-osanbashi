@@ -1,12 +1,13 @@
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:id="@+id/courses"
+        android:layout_alignParentTop="true">
         <Button
             android:id="@+id/course_1"
             android:background="@drawable/course_button_selected"
@@ -44,6 +45,17 @@
         android:id="@+id/map"
         tools:context="tsukurukai.gotoosanbashi.activities.MapsActivity"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_below="@+id/course_1">
+        android:layout_below="@+id/courses">
     </fragment>
-</LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="コース保存"
+        android:id="@+id/course_save"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="15dp" />
+
+</RelativeLayout>
