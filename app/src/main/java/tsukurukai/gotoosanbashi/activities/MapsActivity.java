@@ -47,18 +47,16 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
         final Button button1 = (Button)findViewById(R.id.course_1);
         final Button button2 = (Button)findViewById(R.id.course_2);
         final Button button3 = (Button)findViewById(R.id.course_3);
+        final Button courseSave = (Button)findViewById(R.id.course_save);
 
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addCourse(0);
                 setUpMapIfNeeded();
-                button1.setBackground(getResources().getDrawable(R.drawable.course_button_selected));
-                button1.setTextColor(getResources().getColor(R.color.white));
-                button2.setBackground(getResources().getDrawable(R.drawable.course_button));
-                button2.setTextColor(getResources().getColor(R.color.text_color_black_87));
-                button3.setBackground(getResources().getDrawable(R.drawable.course_button));
-                button3.setTextColor(getResources().getColor(R.color.text_color_black_87));
+                selectedButton(button1);
+                unSelectedButton(button2);
+                unSelectedButton(button3);
             }
         });
 
@@ -67,12 +65,9 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 addCourse(1);
                 setUpMapIfNeeded();
-                button2.setBackground(getResources().getDrawable(R.drawable.course_button_selected));
-                button2.setTextColor(getResources().getColor(R.color.white));
-                button1.setBackground(getResources().getDrawable(R.drawable.course_button));
-                button1.setTextColor(getResources().getColor(R.color.text_color_black_87));
-                button3.setBackground(getResources().getDrawable(R.drawable.course_button));
-                button3.setTextColor(getResources().getColor(R.color.text_color_black_87));
+                selectedButton(button2);
+                unSelectedButton(button1);
+                unSelectedButton(button3);
             }
         });
 
@@ -81,12 +76,20 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 addCourse(2);
                 setUpMapIfNeeded();
-                button3.setBackground(getResources().getDrawable(R.drawable.course_button_selected));
-                button3.setTextColor(getResources().getColor(R.color.white));
-                button1.setBackground(getResources().getDrawable(R.drawable.course_button));
-                button1.setTextColor(getResources().getColor(R.color.text_color_black_87));
-                button2.setBackground(getResources().getDrawable(R.drawable.course_button));
-                button2.setTextColor(getResources().getColor(R.color.text_color_black_87));
+                selectedButton(button3);
+                unSelectedButton(button1);
+                unSelectedButton(button2);
+            }
+        });
+
+        courseSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addCourse(0);
+                setUpMapIfNeeded();
+                selectedButton(button1);
+                unSelectedButton(button2);
+                unSelectedButton(button3);
             }
         });
     }
@@ -168,6 +171,16 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
         for (int i = 0; i < spotsCount; i++) {
             spots.add(Spot.fromJson(sharedPreferences.getString("course:" + courseId + ":spots:" + i, "")));
         }
+    }
+
+    private void selectedButton(Button button) {
+        button.setBackground(getResources().getDrawable(R.drawable.course_button_selected));
+        button.setTextColor(getResources().getColor(R.color.white));
+    }
+
+    private void unSelectedButton(Button button) {
+        button.setBackground(getResources().getDrawable(R.drawable.course_button));
+        button.setTextColor(getResources().getColor(R.color.text_color_black_87));
     }
 
     @Override
