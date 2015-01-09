@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -54,6 +55,7 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 addCourse(0);
                 setUpMapIfNeeded();
+
                 selectedButton(button1);
                 unSelectedButton(button2);
                 unSelectedButton(button3);
@@ -65,6 +67,7 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 addCourse(1);
                 setUpMapIfNeeded();
+
                 selectedButton(button2);
                 unSelectedButton(button1);
                 unSelectedButton(button3);
@@ -76,6 +79,7 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 addCourse(2);
                 setUpMapIfNeeded();
+
                 selectedButton(button3);
                 unSelectedButton(button1);
                 unSelectedButton(button2);
@@ -85,11 +89,30 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
         courseSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addCourse(0);
-                setUpMapIfNeeded();
-                selectedButton(button1);
-                unSelectedButton(button2);
-                unSelectedButton(button3);
+                SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
+
+                int selectedCourse = sharedPreferences.getInt("selected_course", 0);
+                int spotsCount = sharedPreferences.getInt("course:" + selectedCourse + ":spotsCount", 0);
+
+                SharedPreferences saveCourseSharedPreferences = getSharedPreferences("saved_courses", MODE_PRIVATE);
+                int savedCourseCount = saveCourseSharedPreferences.getInt("saved_course_count", 0);
+
+                for (int i = 0; i < spotsCount; i++) {
+                    String spotJson = sharedPreferences.getString("course:" + selectedCourse + ":spots:" + i, "");
+                    saveCourseSharedPreferences
+                            .edit()
+                            .putString("save_course:" + savedCourseCount + ":spots:" + i, spotJson)
+                            .apply();
+                }
+                saveCourseSharedPreferences
+                        .edit()
+                        .putLong("saved_course_time:" + savedCourseCount, System.currentTimeMillis())
+                        .apply();
+
+                saveCourseSharedPreferences
+                        .edit()
+                        .putInt("saved_course_count", ++savedCourseCount)
+                        .commit();
             }
         });
     }
@@ -171,6 +194,11 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
         for (int i = 0; i < spotsCount; i++) {
             spots.add(Spot.fromJson(sharedPreferences.getString("course:" + courseId + ":spots:" + i, "")));
         }
+
+        sharedPreferences
+                .edit()
+                .putInt("selected_course", courseId)
+                .commit();
     }
 
     private void selectedButton(Button button) {
