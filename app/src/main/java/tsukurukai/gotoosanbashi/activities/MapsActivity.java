@@ -101,7 +101,7 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
                     String spotJson = sharedPreferences.getString("course:" + selectedCourse + ":spots:" + i, "");
                     saveCourseSharedPreferences
                             .edit()
-                            .putString("save_course:" + savedCourseCount + ":spots:" + i, spotJson)
+                            .putString("saved_course:" + savedCourseCount + ":spots:" + i, spotJson)
                             .apply();
                 }
                 saveCourseSharedPreferences
@@ -116,6 +116,8 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
             }
         });
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
