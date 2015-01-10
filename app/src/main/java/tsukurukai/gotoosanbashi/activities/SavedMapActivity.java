@@ -34,6 +34,7 @@ public class SavedMapActivity extends ActionBarActivity implements OnMapReadyCal
 
     public static Intent createIntent(Context context, int order) {
         Intent intent = new Intent(context, SavedMapActivity.class);
+        intent.putExtra("order", order);
         return intent;
     }
 
