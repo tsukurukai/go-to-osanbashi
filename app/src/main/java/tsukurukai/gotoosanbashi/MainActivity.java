@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -169,6 +168,9 @@ public class MainActivity extends FragmentActivity {
 
             final TextView continueTextView = (TextView)rootView.findViewById(R.id.link_history);
             onclickContinueTextView(continueTextView);
+
+            TextView versionTextView = (TextView) rootView.findViewById(R.id.text_version);
+            versionTextView.setText("version " + Util.getVersionName(getActivity()));
 
             return rootView;
         }
