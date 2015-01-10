@@ -3,9 +3,11 @@ package tsukurukai.gotoosanbashi.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tsukurukai.gotoosanbashi.R;
+import tsukurukai.gotoosanbashi.Util;
 import tsukurukai.gotoosanbashi.models.Spot;
 
 public class MapsActivity extends ActionBarActivity implements OnMapReadyCallback {
@@ -230,5 +233,17 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
         googleMap.clear();
         addMarker();
         addPolyLine(googleMap);
+        setCameraPosition();
+    }
+
+    private void setCameraPosition() {
+        Spot startSpot = spots.get(1);
+        Spot goal = spots.get(spots.size()-1);
+        Pair<Double, Double> center = Util.betweenLatLng(startSpot.getLat(), startSpot.getLon(), goal.getLat(), goal.getLon(), 1, 2);
+        float[] results = new float[1];
+        Location.distanceBetween(startSpot.getLat(), startSpot.getLon(), goal.getLat(), goal.getLon(), results);
+        float distance = results[0];
+        if (distance < 4000) mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(center.first, center.second), 12));
+        else mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(center.first, center.second), 10));
     }
 }

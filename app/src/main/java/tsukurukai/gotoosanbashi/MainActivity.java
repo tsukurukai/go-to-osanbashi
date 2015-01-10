@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,12 +28,16 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import tsukurukai.gotoosanbashi.activities.HistoryListActivity;
 import tsukurukai.gotoosanbashi.activities.MapsActivity;
@@ -179,55 +184,107 @@ public class MainActivity extends FragmentActivity {
             });
 
         }
+        private static final int MINIMUM_SPOT_COUNT = 3;
 
         private ArrayList<Spot> getSpots(Location location) {
             ArrayList<Spot> spots = new ArrayList<Spot>();
 
-            String baseUri  = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
-            String key      = "key=" + Secret.GOOGLE_PLACES_API_KEY;
-            String types    = "amusement_park|aquarium|food|museum|park|spa|zoo";
-            String radius   = "&radius=3000";
-            String sensor   = "&sensor=false";
-            String uri = baseUri + key + radius + sensor;
-            try {
-                uri += "&types=" + URLEncoder.encode(types, "utf-8");
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
-            }
+            String uri = makeSpotUri();
 
             Double currentLat = location.getLatitude();
             Double currentLng = location.getLongitude();
             Double goalLat = Const.GOAL_LATITUDE;
             Double goalLng = Const.GOAL_LONGITUDE;
 
+            // 立ち寄り地の数分 request
             for (int i = 1; i < NUMBER_OF_SPOTS ; i++) {
-                Double spotLat = currentLat * i / NUMBER_OF_SPOTS + goalLat * (NUMBER_OF_SPOTS - i) / NUMBER_OF_SPOTS;
-                Double spotLng = currentLng * i / NUMBER_OF_SPOTS + goalLng * (NUMBER_OF_SPOTS - i) / NUMBER_OF_SPOTS;
-                String spotUri = uri + "&location=" + String.valueOf(spotLat) + "," + String.valueOf(spotLng);
-                Log.d("spotURI", "spotURI:" + spotUri);
-                HttpGet request = new HttpGet(spotUri);
-                HttpResponse httpResponse;
-                HttpClient httpClient = new DefaultHttpClient();
-                try {
-                    httpResponse = httpClient.execute(request);
-                    int status = httpResponse.getStatusLine().getStatusCode();
-                    if (HttpStatus.SC_OK == status) {
-                        JSONObject json = new JSONObject(EntityUtils.toString(httpResponse.getEntity()));
-                        JSONArray results = json.getJSONArray("results");
-                        for (int j = 0; j < results.length(); j++) {
-                            JSONObject jsonObject = results.getJSONObject(j);
-                            spots.add(new Spot(jsonObject.getString("name"),
-                                    valueOf(jsonObject.getJSONObject("geometry").getJSONObject("location").getString("lat")),
-                                    valueOf(jsonObject.getJSONObject("geometry").getJSONObject("location").getString("lng"))));
+                Pair<Double, Double> spotLatlng = Util.betweenLatLng(currentLat, currentLng, goalLat, goalLng, i, NUMBER_OF_SPOTS);
+                Double spotLat = spotLatlng.first;
+                Double spotLng = spotLatlng.second;
+
+                String pageToken = ""; // pager
+
+                int spotCount = 0;
+                boolean hasNext = true;
+                while( spotCount < MINIMUM_SPOT_COUNT || hasNext) {
+                    String spotUri = uri + "&location=" + String.valueOf(spotLat) + ","
+                            + String.valueOf(spotLng) + pageToken;
+                    Log.d("spotURI", "spotURI: " + spotUri);
+                    HttpGet request = new HttpGet(spotUri);
+                    HttpResponse httpResponse;
+                    HttpClient httpClient = new DefaultHttpClient();
+                    try {
+                        httpResponse = httpClient.execute(request);
+                        int status = httpResponse.getStatusLine().getStatusCode();
+                        if (HttpStatus.SC_OK == status) {
+                            JSONObject json = new JSONObject(EntityUtils.toString(httpResponse.getEntity()));
+                            JSONArray results = json.getJSONArray("results");
+                            if (json.has("next_page_token")) {
+                                pageToken = "&pagetoken=" + json.getString("next_page_token");
+                                spotCount += addSpots(spots, results);
+                            } else {
+                                hasNext = false;
+                            }
+                        } else {
+                            Log.d("HttpStatus", "HTTP_Status: " + status);
                         }
-                    } else {
-                        Log.d("HttpStatus", "Status" + status);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
                 }
             }
             return spots;
+        }
+
+        private int addSpots(ArrayList<Spot> spots, JSONArray results) throws JSONException {
+            int spotCount = 0;
+            for (int j = 0; j < results.length(); j++) {
+                JSONObject result = results.getJSONObject(j);
+                JSONArray typeArray = result.getJSONArray("types");
+                if (!isBlackListedSpot(typeArray)) {
+                    spots.add(new Spot(result.getString("name"),
+                            valueOf(result.getJSONObject("geometry").getJSONObject("location").getString("lat")),
+                            valueOf(result.getJSONObject("geometry").getJSONObject("location").getString("lng"))));
+                    spotCount++;
+                }
+            }
+            return spotCount;
+        }
+
+        private String makeSpotUri() {
+            String baseUri  = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
+            String key      = "key=" + Secret.GOOGLE_PLACES_API_KEY;
+            String whiteList = Const.SPOT_TYPE_WHITE_LIST;
+            String radius   = "&radius=3000";
+            String sensor   = "&sensor=false";
+            String option   = "&language=ja";
+            String uri = baseUri + key + radius + sensor + option;
+            try {
+                uri += "&types=" + URLEncoder.encode(whiteList, "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+            return uri;
+        }
+
+        /**
+         * A method to check if a spot has a black-listed type
+         * @return boolean
+         */
+        private boolean isBlackListedSpot(JSONArray typeArray) throws JSONException {
+            String blackList = Const.SPOT_TYPE_BLACK_LIST;
+            Pattern pattern = Pattern.compile(blackList);
+
+            for (int i = 0; i < typeArray.length(); i++) {
+                String type = (String) typeArray.get(i);
+                Matcher m = pattern.matcher(type);
+                if ( m.find() ) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void currentLocationExecute(LocationListener listener) {
