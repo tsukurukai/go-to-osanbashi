@@ -53,7 +53,7 @@
             android:background="@drawable/start_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#fff"
+            android:textColor="@color/white"
             android:textSize="24sp"
             android:text="はじめる">
         </TextView>
@@ -63,7 +63,7 @@
             android:background="@drawable/start_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#fff"
+            android:textColor="@color/white"
             android:textSize="24sp"
             android:text="続きから">
         </TextView>
