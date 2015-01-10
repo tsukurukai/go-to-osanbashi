@@ -143,7 +143,7 @@ public class HistoryListActivity extends ActionBarActivity {
             TextView courseTitle = (TextView)convertView.findViewById(R.id.course_title);
             for (int i = 1; i < 5; i++) {
                 if (i > 1) {
-                    title += "　→　︎";
+                    title += System.lineSeparator() + " → ︎";
                 }
                 Spot spot = courseDataList.get(position).getSpots().get(i);
                 title += spot.getName();
