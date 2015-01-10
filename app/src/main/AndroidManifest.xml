@@ -46,6 +46,11 @@
             android:name=".activities.HistoryListActivity"
             android:label="@string/title_activity_maps" >
         </activity>
+
+        <activity
+            android:name=".activities.SavedMapActivity"
+            android:label="@string/title_activity_maps" >
+        </activity>
     </application>
 
 </manifest>

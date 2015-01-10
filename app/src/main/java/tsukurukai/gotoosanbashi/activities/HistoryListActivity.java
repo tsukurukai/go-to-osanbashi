@@ -4,12 +4,15 @@ import android.app.ListFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -61,7 +64,6 @@ public class HistoryListActivity extends FragmentActivity {
                 List<Spot> spots = new ArrayList<>();
                 for (int j = 0; j < 5; j++) {
                     String spotJson = saveCourseSharedPreferences.getString("saved_course:" + i + ":spots:" + j, "");
-                    System.out.println(spotJson);
                     Spot spot = Spot.fromJson(spotJson);
                     spots.add(spot);
                 }
@@ -74,6 +76,13 @@ public class HistoryListActivity extends FragmentActivity {
             setListAdapter(adapter);
         }
 
+        @Override
+        public void onListItemClick(ListView l, View v, int position, long id) {
+            super.onListItemClick(l, v, position, id);
+            Intent intent = SavedMapActivity.createIntent(getActivity());
+            intent.putExtra("order", position);
+            startActivity(intent);
+        }
     }
 
     public static class CourseHistoryAdapter extends ArrayAdapter<CourseData> {
@@ -122,6 +131,9 @@ public class HistoryListActivity extends FragmentActivity {
             }
             return convertView;
         }
+
+
+
     }
 
     private static class CourseData {
