@@ -125,6 +125,7 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
 
                 Intent intent = SavedMapActivity.createIntent(getApplicationContext(), --savedCourseCount);
                 startActivity(intent);
+                finish();
             }
         });
     }
