@@ -32,6 +32,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Constructor;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -270,10 +271,10 @@ public class MainActivity extends FragmentActivity {
             for (int j = 0; j < results.length(); j++) {
                 JSONObject result = results.getJSONObject(j);
                 JSONArray typeArray = result.getJSONArray("types");
-                if (!isBlackListedSpot(typeArray)) {
-                    spots.add(new Spot(result.getString("name"),
-                            valueOf(result.getJSONObject("geometry").getJSONObject("location").getString("lat")),
-                            valueOf(result.getJSONObject("geometry").getJSONObject("location").getString("lng"))));
+                String lat = result.getJSONObject("geometry").getJSONObject("location").getString("lat");
+                String lng = result.getJSONObject("geometry").getJSONObject("location").getString("lng");
+                if (!isBlackListedSpot(typeArray) && isInYokohama(valueOf(lat),valueOf(lng))) {
+                    spots.add(new Spot(result.getString("name"), valueOf(lat), valueOf(lng)));
                     spotCount++;
                 }
             }
@@ -312,6 +313,19 @@ public class MainActivity extends FragmentActivity {
                 }
             }
             return false;
+        }
+
+        /**
+         * A method to check if a spot is in Yokohama
+         * @return boolean
+         */
+        private boolean isInYokohama(Double latitude, Double longitude) {
+            int distance = Util.betweenDistance(latitude, longitude, Const.YOKOHAMA_CENTER_LATITUDE,
+                    Const.YOKOHAMA_CENTER_LONGITUDE);
+            if ( distance > Const.YOKOHAMA_CENTER_RADIUS ) {
+                return false;
+            }
+            return true;
         }
 
         private void currentLocationExecute(LocationListener listener) {
