@@ -65,6 +65,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textSize="24sp"
+            android:layout_marginLeft="16dp"
             android:text="続きから">
         </TextView>
     </LinearLayout>

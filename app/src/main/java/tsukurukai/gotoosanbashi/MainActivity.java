@@ -90,6 +90,9 @@ public class MainActivity extends FragmentActivity {
      */
     public static class PlaceholderFragment extends Fragment {
 
+        private TextView linkMapTextView;
+        private TextView linkHistoryTextView;
+
         public PlaceholderFragment() {
         }
 
@@ -97,8 +100,8 @@ public class MainActivity extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            final TextView textView = (TextView)rootView.findViewById(R.id.link_map);
-            textView.setOnClickListener(new View.OnClickListener() {
+            linkMapTextView = (TextView)rootView.findViewById(R.id.link_map);
+            linkMapTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     final LoadingDialogFragment loadingDialogFragment = LoadingDialogFragment.newInstance();
@@ -115,7 +118,7 @@ public class MainActivity extends FragmentActivity {
                                 protected Void doInBackground(Void... params) {
                                     ArrayList<Spot> spots = getSpots(location);
                                     Spot start = new Spot("現在地", location.getLatitude(), location.getLongitude());
-                                    Spot goal  = new Spot(Const.GOAL_NAME, Const.GOAL_LATITUDE, Const.GOAL_LONGITUDE);
+                                    Spot goal = new Spot(Const.GOAL_NAME, Const.GOAL_LATITUDE, Const.GOAL_LONGITUDE);
 
                                     SharedPreferences sharedPreferences = getActivity().getSharedPreferences("data", getActivity().MODE_PRIVATE);
 
@@ -123,14 +126,14 @@ public class MainActivity extends FragmentActivity {
                                         List<Spot> course = CourseCalculator.calculate(spots, 3, start, goal);
                                         for (int j = 0; j < course.size(); j++) {
                                             sharedPreferences
-                                            .edit()
-                                            .putString("course:" + i + ":spots:" + j, course.get(j).toJson())
-                                            .apply();
+                                                    .edit()
+                                                    .putString("course:" + i + ":spots:" + j, course.get(j).toJson())
+                                                    .apply();
                                         }
                                         sharedPreferences
-                                            .edit()
-                                            .putInt("course:" + i + ":spotsCount", course.size())
-                                            .commit();
+                                                .edit()
+                                                .putInt("course:" + i + ":spotsCount", course.size())
+                                                .commit();
                                     }
 
                                     if (loadingDialogFragment != null && loadingDialogFragment.getDialog() != null) {
@@ -166,13 +169,24 @@ public class MainActivity extends FragmentActivity {
                 }
             });
 
-            final TextView continueTextView = (TextView)rootView.findViewById(R.id.link_history);
-            onclickContinueTextView(continueTextView);
+            linkHistoryTextView = (TextView)rootView.findViewById(R.id.link_history);
+            onclickContinueTextView(linkHistoryTextView);
 
             TextView versionTextView = (TextView) rootView.findViewById(R.id.text_version);
             versionTextView.setText("version " + Util.getVersionName(getActivity()));
 
             return rootView;
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            int savedCourseCount = getActivity().getSharedPreferences("saved_courses", MODE_PRIVATE).getInt("saved_course_count", 0);
+            if (savedCourseCount > 0) {
+                linkHistoryTextView.setVisibility(View.VISIBLE);
+            } else {
+                linkHistoryTextView.setVisibility(View.GONE);
+            }
         }
 
         private void onclickContinueTextView(TextView continueTextView) {
