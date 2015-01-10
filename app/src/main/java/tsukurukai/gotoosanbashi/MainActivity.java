@@ -11,8 +11,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,23 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import tsukurukai.gotoosanbashi.activities.HistoryListActivity;
 import tsukurukai.gotoosanbashi.activities.MapsActivity;
@@ -44,12 +27,8 @@ import tsukurukai.gotoosanbashi.fragments.LoadingDialogFragment;
 import tsukurukai.gotoosanbashi.models.CourseCalculator;
 import tsukurukai.gotoosanbashi.models.Spot;
 
-import static java.lang.Double.valueOf;
-
 
 public class MainActivity extends FragmentActivity {
-
-    private static final Integer NUMBER_OF_SPOTS = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +95,7 @@ public class MainActivity extends FragmentActivity {
                             new AsyncTask<Void, Void, Void>() {
                                 @Override
                                 protected Void doInBackground(Void... params) {
-                                    ArrayList<Spot> spots = getSpots(location);
+                                    ArrayList<Spot> spots = Spot.findByLocation(location);
                                     Spot start = new Spot("現在地", location.getLatitude(), location.getLongitude());
                                     Spot goal = new Spot(Const.GOAL_NAME, Const.GOAL_LATITUDE, Const.GOAL_LONGITUDE);
 
@@ -200,119 +179,6 @@ public class MainActivity extends FragmentActivity {
             });
 
         }
-        private static final int MINIMUM_SPOT_COUNT = 3;
-        private static final int MINIMUM_DISTANCE = 500;
-        private static final int MAXIMUM_DISTANCE = 10000;
-        private static final int MAXIMUM_REQUEST_COUNT = 5;
-
-        private ArrayList<Spot> getSpots(Location location) {
-            ArrayList<Spot> spots = new ArrayList<Spot>();
-
-            Double currentLat = location.getLatitude();
-            Double currentLng = location.getLongitude();
-            Double goalLat = Const.GOAL_LATITUDE;
-            Double goalLng = Const.GOAL_LONGITUDE;
-
-            int distance = Util.betweenDistance(currentLat, currentLng, goalLat, goalLng) / 2;
-            if ( distance < MINIMUM_DISTANCE ) {
-                distance = MINIMUM_DISTANCE;
-            } else if ( distance > MAXIMUM_DISTANCE ) {
-                distance = MAXIMUM_DISTANCE;
-            }
-            String uri = makeSpotUri(distance);
-
-            // 立ち寄り地の数分 request
-            for (int i = 1; i < NUMBER_OF_SPOTS ; i++) {
-                Pair<Double, Double> spotLatlng = Util.betweenLatLng(currentLat, currentLng, goalLat, goalLng, i, NUMBER_OF_SPOTS);
-                Double spotLat = spotLatlng.first;
-                Double spotLng = spotLatlng.second;
-
-                String pageToken = ""; // pager
-
-                int spotCount = 0;
-                int requestCount = 0;
-                boolean hasNext = true;
-                while( spotCount < MINIMUM_SPOT_COUNT && hasNext && requestCount < MAXIMUM_REQUEST_COUNT) {
-                    String spotUri = uri + "&location=" + String.valueOf(spotLat) + ","
-                            + String.valueOf(spotLng) + pageToken;
-                    Log.d("spotURI", "spotURI: " + spotUri);
-                    HttpGet request = new HttpGet(spotUri);
-                    HttpResponse httpResponse;
-                    HttpClient httpClient = new DefaultHttpClient();
-                    requestCount++;
-                    try {
-                        httpResponse = httpClient.execute(request);
-                        int status = httpResponse.getStatusLine().getStatusCode();
-                        if (HttpStatus.SC_OK == status) {
-                            JSONObject json = new JSONObject(EntityUtils.toString(httpResponse.getEntity()));
-                            JSONArray results = json.getJSONArray("results");
-                            if (json.has("next_page_token")) {
-                                pageToken = "&pagetoken=" + json.getString("next_page_token");
-                                spotCount += addSpots(spots, results);
-                            } else {
-                                hasNext = false;
-                            }
-                        } else {
-                            Log.d("HttpStatus", "HTTP_Status: " + status);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            return spots;
-        }
-
-        private int addSpots(ArrayList<Spot> spots, JSONArray results) throws JSONException {
-            int spotCount = 0;
-            for (int j = 0; j < results.length(); j++) {
-                JSONObject result = results.getJSONObject(j);
-                JSONArray typeArray = result.getJSONArray("types");
-                if (!isBlackListedSpot(typeArray)) {
-                    spots.add(new Spot(result.getString("name"),
-                            valueOf(result.getJSONObject("geometry").getJSONObject("location").getString("lat")),
-                            valueOf(result.getJSONObject("geometry").getJSONObject("location").getString("lng"))));
-                    spotCount++;
-                }
-            }
-            return spotCount;
-        }
-
-        private String makeSpotUri(int distance) {
-            String baseUri  = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
-            String key      = "key=" + Secret.GOOGLE_PLACES_API_KEY;
-            String whiteList = Const.SPOT_TYPE_WHITE_LIST;
-            String radius   = "&radius=" + String.valueOf(distance);
-            String sensor   = "&sensor=false";
-            String option   = "&language=ja";
-            String uri = baseUri + key + radius + sensor + option;
-            try {
-                uri += "&types=" + URLEncoder.encode(whiteList, "utf-8");
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
-            }
-            return uri;
-        }
-
-        /**
-         * A method to check if a spot has a black-listed type
-         * @return boolean
-         */
-        private boolean isBlackListedSpot(JSONArray typeArray) throws JSONException {
-            String blackList = Const.SPOT_TYPE_BLACK_LIST;
-            Pattern pattern = Pattern.compile(blackList);
-
-            for (int i = 0; i < typeArray.length(); i++) {
-                String type = (String) typeArray.get(i);
-                Matcher m = pattern.matcher(type);
-                if ( m.find() ) {
-                    return true;
-                }
-            }
-            return false;
-        }
 
         private void currentLocationExecute(LocationListener listener) {
             LocationManager locationManager =
@@ -336,6 +202,7 @@ public class MainActivity extends FragmentActivity {
                 );
             }
         }
+
     }
 
 }

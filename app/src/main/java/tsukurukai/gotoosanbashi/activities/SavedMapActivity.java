@@ -3,11 +3,9 @@ package tsukurukai.gotoosanbashi.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Pair;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -15,15 +13,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import tsukurukai.gotoosanbashi.MapConfigurer;
 import tsukurukai.gotoosanbashi.R;
-import tsukurukai.gotoosanbashi.Util;
 import tsukurukai.gotoosanbashi.models.Spot;
 
 public class SavedMapActivity extends ActionBarActivity implements OnMapReadyCallback {
@@ -33,6 +28,7 @@ public class SavedMapActivity extends ActionBarActivity implements OnMapReadyCal
 
     public static Intent createIntent(Context context, int order) {
         Intent intent = new Intent(context, SavedMapActivity.class);
+        intent.putExtra("order", order);
         return intent;
     }
 
@@ -53,6 +49,10 @@ public class SavedMapActivity extends ActionBarActivity implements OnMapReadyCal
 
         setContentView(R.layout.activity_saved_map);
         setUpMapIfNeeded();
+
+        Toolbar toolbar = (Toolbar)findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
@@ -110,46 +110,14 @@ public class SavedMapActivity extends ActionBarActivity implements OnMapReadyCal
     private void setUpMap() {
         mMap.setMyLocationEnabled(true);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(35.469561, 139.599325), 10));
-        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker marker) {
-                Uri uri = Uri.parse("https://www.google.co.jp/#q=" + marker.getTitle());
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-            }
-        });
-    }
-
-    private void addMarker() {
-        for (Spot spot: spots) {
-            mMap.addMarker(new MarkerOptions().position(new LatLng(spot.getLat(), spot.getLon())).title(spot.getName()));
-        }
-    }
-
-    private void addPolyLine(GoogleMap googleMap) {
-        PolylineOptions polyLine = new PolylineOptions();
-        for (Spot spot: spots) {
-            polyLine.geodesic(true).add(new LatLng(spot.getLat(), spot.getLon()));
-        }
-        googleMap.addPolyline(polyLine);
+        mMap.setOnInfoWindowClickListener(MapConfigurer.getOnInfoWindowClickListener(this));
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         googleMap.clear();
-        addMarker();
-        addPolyLine(googleMap);
-        setCameraPosition();
-    }
-
-    private void setCameraPosition() {
-        Spot startSpot = spots.get(1);
-        Spot goal = spots.get(spots.size()-1);
-        Pair<Double, Double> center = Util.betweenLatLng(startSpot.getLat(), startSpot.getLon(), goal.getLat(), goal.getLon(), 1, 2);
-        float[] results = new float[1];
-        Location.distanceBetween(startSpot.getLat(), startSpot.getLon(), goal.getLat(), goal.getLon(), results);
-        float distance = results[0];
-        if (distance < 4000) mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(center.first, center.second), 12));
-        else mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(center.first, center.second), 10));
+        MapConfigurer.addMarker(mMap, spots);
+        MapConfigurer.addPolyLineOptions(mMap, spots);
+        MapConfigurer.moveCamera(mMap, spots);
     }
 }
