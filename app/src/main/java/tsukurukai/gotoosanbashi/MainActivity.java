@@ -187,16 +187,24 @@ public class MainActivity extends FragmentActivity {
 
         }
         private static final int MINIMUM_SPOT_COUNT = 3;
+        private static final int MINIMUM_DISTANCE = 500;
+        private static final int MAXIMUM_DISTANCE = 10000;
 
         private ArrayList<Spot> getSpots(Location location) {
             ArrayList<Spot> spots = new ArrayList<Spot>();
-
-            String uri = makeSpotUri();
 
             Double currentLat = location.getLatitude();
             Double currentLng = location.getLongitude();
             Double goalLat = Const.GOAL_LATITUDE;
             Double goalLng = Const.GOAL_LONGITUDE;
+
+            int distance = Util.betweenDistance(currentLat, currentLng, goalLat, goalLng) / 2;
+            if ( distance < MINIMUM_DISTANCE ) {
+                distance = MINIMUM_DISTANCE;
+            } else if ( distance > MAXIMUM_DISTANCE ) {
+                distance = MAXIMUM_DISTANCE;
+            }
+            String uri = makeSpotUri(distance);
 
             // 立ち寄り地の数分 request
             for (int i = 1; i < NUMBER_OF_SPOTS ; i++) {
@@ -208,7 +216,7 @@ public class MainActivity extends FragmentActivity {
 
                 int spotCount = 0;
                 boolean hasNext = true;
-                while( spotCount < MINIMUM_SPOT_COUNT || hasNext) {
+                while( spotCount < MINIMUM_SPOT_COUNT && hasNext) {
                     String spotUri = uri + "&location=" + String.valueOf(spotLat) + ","
                             + String.valueOf(spotLng) + pageToken;
                     Log.d("spotURI", "spotURI: " + spotUri);
@@ -255,11 +263,11 @@ public class MainActivity extends FragmentActivity {
             return spotCount;
         }
 
-        private String makeSpotUri() {
+        private String makeSpotUri(int distance) {
             String baseUri  = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
             String key      = "key=" + Secret.GOOGLE_PLACES_API_KEY;
             String whiteList = Const.SPOT_TYPE_WHITE_LIST;
-            String radius   = "&radius=3000";
+            String radius   = "&radius=" + String.valueOf(distance);
             String sensor   = "&sensor=false";
             String option   = "&language=ja";
             String uri = baseUri + key + radius + sensor + option;
