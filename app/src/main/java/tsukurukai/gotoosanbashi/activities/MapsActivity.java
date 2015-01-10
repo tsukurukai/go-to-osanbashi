@@ -122,7 +122,10 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
                         .putInt("saved_course_count", ++savedCourseCount)
                         .commit();
 
-                Toast.makeText(v.getContext(), "コース" + ++selectedCourse + "を保存しました", Toast.LENGTH_SHORT).show();
+
+                Intent intent = SavedMapActivity.createIntent(getApplicationContext());
+                intent.putExtra("order", --savedCourseCount);
+                startActivity(intent);
             }
         });
     }

@@ -4,7 +4,7 @@
     <string name="app_name">大さん橋へ行こう！</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_maps">大さん橋へ向かう</string>
+    <string name="title_activity_maps">コースを選ぶ</string>
     <string name="course_1">コース１</string>
     <string name="course_2">コース２</string>
     <string name="course_3">コース３</string>
