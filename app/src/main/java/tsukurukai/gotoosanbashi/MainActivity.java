@@ -203,6 +203,7 @@ public class MainActivity extends FragmentActivity {
         private static final int MINIMUM_SPOT_COUNT = 3;
         private static final int MINIMUM_DISTANCE = 500;
         private static final int MAXIMUM_DISTANCE = 10000;
+        private static final int MAXIMUM_REQUEST_COUNT = 5;
 
         private ArrayList<Spot> getSpots(Location location) {
             ArrayList<Spot> spots = new ArrayList<Spot>();
@@ -229,14 +230,16 @@ public class MainActivity extends FragmentActivity {
                 String pageToken = ""; // pager
 
                 int spotCount = 0;
+                int requestCount = 0;
                 boolean hasNext = true;
-                while( spotCount < MINIMUM_SPOT_COUNT && hasNext) {
+                while( spotCount < MINIMUM_SPOT_COUNT && hasNext && requestCount < MAXIMUM_REQUEST_COUNT) {
                     String spotUri = uri + "&location=" + String.valueOf(spotLat) + ","
                             + String.valueOf(spotLng) + pageToken;
                     Log.d("spotURI", "spotURI: " + spotUri);
                     HttpGet request = new HttpGet(spotUri);
                     HttpResponse httpResponse;
                     HttpClient httpClient = new DefaultHttpClient();
+                    requestCount++;
                     try {
                         httpResponse = httpClient.execute(request);
                         int status = httpResponse.getStatusLine().getStatusCode();
