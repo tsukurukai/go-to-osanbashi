@@ -53,7 +53,11 @@ public class MapConfigurer {
         Location.distanceBetween(startSpot.getLat(), startSpot.getLon(), goal.getLat(), goal.getLon(), results);
         float distance = results[0];
         CameraUpdate cameraUpdate;
-        if (distance < 4000) {
+        if (distance < 2000) {
+            cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(center.first, center.second), 14);
+        } else if (distance < 3000) {
+            cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(center.first, center.second), 13);
+        } else if (distance < 4000) {
             cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(center.first, center.second), 12);
         } else {
             cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(center.first, center.second), 10);
