@@ -5,6 +5,8 @@ import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 
+import tsukurukai.gotoosanbashi.R;
+
 public class LoadingDialogFragment extends DialogFragment {
     private ProgressDialog progressDialog;
 
@@ -17,7 +19,7 @@ public class LoadingDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (progressDialog == null) {
             progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("Loading...");
+            progressDialog.setMessage(getResources().getString(R.string.text_loading));
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         }
         setCancelable(false);
