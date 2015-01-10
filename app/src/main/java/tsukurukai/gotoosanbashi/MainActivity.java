@@ -30,11 +30,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import tsukurukai.gotoosanbashi.activities.HistoryListActivity;
 import tsukurukai.gotoosanbashi.activities.MapsActivity;
 import tsukurukai.gotoosanbashi.fragments.LoadingDialogFragment;
 import tsukurukai.gotoosanbashi.models.CourseCalculator;
@@ -56,7 +56,6 @@ public class MainActivity extends FragmentActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
-
     }
 
 
@@ -162,7 +161,23 @@ public class MainActivity extends FragmentActivity {
                     });
                 }
             });
+
+            final TextView continueTextView = (TextView)rootView.findViewById(R.id.link_history);
+            onclickContinueTextView(continueTextView);
+
             return rootView;
+        }
+
+        private void onclickContinueTextView(TextView continueTextView) {
+
+            continueTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = HistoryListActivity.createIntent(getActivity());
+                    startActivity(intent);
+                }
+            });
+
         }
 
         private ArrayList<Spot> getSpots(Location location) {

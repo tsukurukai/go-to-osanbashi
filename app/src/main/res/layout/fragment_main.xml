@@ -54,17 +54,35 @@
             />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/link_map"
-        android:background="@drawable/start_button"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_centerHorizontal="true"
         android:layout_above="@id/bottom_links"
-        android:layout_marginBottom="32dp"
-        android:textColor="#fff"
-        android:textSize="24sp"
-        android:text="はじめる">
-    </TextView>
+        android:gravity="center"
+        android:layout_marginBottom="32dp">
+
+        <TextView
+            android:id="@+id/link_map"
+            android:background="@drawable/start_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#fff"
+            android:textSize="24sp"
+            android:text="はじめる">
+        </TextView>
+
+        <TextView
+            android:id="@+id/link_history"
+            android:background="@drawable/start_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#fff"
+            android:textSize="24sp"
+            android:text="続きから">
+        </TextView>
+    </LinearLayout>
 
 </RelativeLayout>
