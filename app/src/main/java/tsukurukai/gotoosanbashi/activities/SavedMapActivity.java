@@ -7,6 +7,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.view.MenuItem;
 
@@ -53,6 +54,10 @@ public class SavedMapActivity extends ActionBarActivity implements OnMapReadyCal
 
         setContentView(R.layout.activity_saved_map);
         setUpMapIfNeeded();
+
+        Toolbar toolbar = (Toolbar)findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
