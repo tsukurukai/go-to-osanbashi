@@ -64,7 +64,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/start_button"
-        android:text="コース決定"
+        android:text="このコースでいく"
         android:id="@+id/course_save"
         android:layout_gravity="center_horizontal"
         android:layout_alignParentBottom="true"
