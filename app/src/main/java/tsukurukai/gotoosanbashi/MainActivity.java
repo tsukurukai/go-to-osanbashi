@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -183,8 +184,9 @@ public class MainActivity extends FragmentActivity {
 
             // 立ち寄り地の数分 request
             for (int i = 1; i < NUMBER_OF_SPOTS ; i++) {
-                Double spotLat = ( currentLat * i / NUMBER_OF_SPOTS ) + ( goalLat * (NUMBER_OF_SPOTS - i) / NUMBER_OF_SPOTS );
-                Double spotLng = ( currentLng * i / NUMBER_OF_SPOTS ) + ( goalLng * (NUMBER_OF_SPOTS - i) / NUMBER_OF_SPOTS );
+                Pair<Double, Double> spotLatlng = Util.betweenLatLng(currentLat, currentLng, goalLat, goalLng, i, NUMBER_OF_SPOTS);
+                Double spotLat = spotLatlng.first;
+                Double spotLng = spotLatlng.second;
 
                 String pageToken = ""; // pager
 
