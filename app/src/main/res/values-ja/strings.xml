@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">大さん橋へ行こう！</string>
+    <string name="title_activity_maps">コースを選ぶ</string>
+    <string name="title_activity_savedmap">大さん橋へ向かう</string>
+
+    <string name="button_course_1">コース１</string>
+    <string name="button_course_2">コース２</string>
+    <string name="button_course_3">コース３</string>
+    <string name="button_start">はじめる</string>
+    <string name="button_history">つづける</string>
+    <string name="button_select_cource">このコースで行く</string>
+
+    <string name="text_your_location">現在地</string>
+    <string name="text_osanbashi">大さん橋</string>
+    <string name="text_loading">読み込み中...</string>
+</resources>

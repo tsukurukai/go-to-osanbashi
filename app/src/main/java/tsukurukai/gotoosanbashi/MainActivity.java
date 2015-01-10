@@ -54,13 +54,6 @@ public class MainActivity extends FragmentActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -96,8 +89,8 @@ public class MainActivity extends FragmentActivity {
                                 @Override
                                 protected Void doInBackground(Void... params) {
                                     ArrayList<Spot> spots = Spot.findByLocation(location);
-                                    Spot start = new Spot("現在地", location.getLatitude(), location.getLongitude());
-                                    Spot goal = new Spot(Const.GOAL_NAME, Const.GOAL_LATITUDE, Const.GOAL_LONGITUDE);
+                                    Spot start = new Spot(getResources().getString(R.string.text_your_location), location.getLatitude(), location.getLongitude());
+                                    Spot goal = new Spot(getResources().getString(R.string.text_osanbashi), Const.GOAL_LATITUDE, Const.GOAL_LONGITUDE);
 
                                     SharedPreferences sharedPreferences = getActivity().getSharedPreferences("data", getActivity().MODE_PRIVATE);
 

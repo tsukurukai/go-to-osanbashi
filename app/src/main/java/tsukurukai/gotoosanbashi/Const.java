@@ -4,7 +4,6 @@ package tsukurukai.gotoosanbashi;
  * Created by satot on 2014/12/29.
  */
 public class Const {
-    public static final String GOAL_NAME = "大さん橋";
     public static final Double GOAL_LATITUDE  = 35.451762;
     public static final Double GOAL_LONGITUDE = 139.647758;
     public static final Double YOKOHAMA_CENTER_LATITUDE = 35.450762; // 横浜市桜台小学校
