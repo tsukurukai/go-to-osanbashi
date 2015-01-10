@@ -169,7 +169,7 @@ public class MainActivity extends FragmentActivity {
             return rootView;
         }
 
-        private static final int MINIMUM_SPOT_COUNT = 20;
+        private static final int MINIMUM_SPOT_COUNT = 3;
 
         private ArrayList<Spot> getSpots(Location location) {
             ArrayList<Spot> spots = new ArrayList<Spot>();
