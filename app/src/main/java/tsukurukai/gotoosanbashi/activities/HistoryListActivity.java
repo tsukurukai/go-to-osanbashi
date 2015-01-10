@@ -114,21 +114,23 @@ public class HistoryListActivity extends FragmentActivity {
             LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.listitem_courses, null);
-                TextView orderView = (TextView)convertView.findViewById(R.id.course_order);
-                orderView.setText(Integer.toString(position + 1));
+            }
 
-                String title = new String();
-                TextView courseTitle = (TextView)convertView.findViewById(R.id.course_title);
-                for (int i = 1; i < 5; i++) {
-                    if (i > 1) {
-                        title += "　→　︎";
-                    }
-                    Spot spot = courseDataList.get(position).getSpots().get(i);
-                    title += spot.getName();
+            TextView orderView = (TextView)convertView.findViewById(R.id.course_order);
+            orderView.setText(Integer.toString(position + 1));
+
+            String title = new String();
+            TextView courseTitle = (TextView)convertView.findViewById(R.id.course_title);
+            for (int i = 1; i < 5; i++) {
+                if (i > 1) {
+                    title += "　→　︎";
                 }
+                Spot spot = courseDataList.get(position).getSpots().get(i);
+                title += spot.getName();
 
                 courseTitle.setText(title);
             }
+
             return convertView;
         }
 
