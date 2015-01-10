@@ -79,8 +79,7 @@ public class HistoryListActivity extends FragmentActivity {
         @Override
         public void onListItemClick(ListView l, View v, int position, long id) {
             super.onListItemClick(l, v, position, id);
-            Intent intent = SavedMapActivity.createIntent(getActivity());
-            intent.putExtra("order", position);
+            Intent intent = SavedMapActivity.createIntent(getActivity(), position);
             startActivity(intent);
         }
     }

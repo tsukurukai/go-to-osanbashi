@@ -123,8 +123,7 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
                         .commit();
 
 
-                Intent intent = SavedMapActivity.createIntent(getApplicationContext());
-                intent.putExtra("order", --savedCourseCount);
+                Intent intent = SavedMapActivity.createIntent(getApplicationContext(), --savedCourseCount);
                 startActivity(intent);
             }
         });
