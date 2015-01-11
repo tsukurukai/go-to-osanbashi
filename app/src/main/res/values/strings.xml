@@ -12,6 +12,7 @@
     <string name="button_history">Continue</string>
     <string name="button_select_cource">OK</string>
 
+    <string name="text_top_page_header">Go to Osanbashi!</string>
     <string name="text_your_location">Your location</string>
     <string name="text_osanbashi">Osanbashi</string>
     <string name="text_loading">Loading...</string>
