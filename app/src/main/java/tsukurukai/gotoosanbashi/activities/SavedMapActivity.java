@@ -109,7 +109,6 @@ public class SavedMapActivity extends ActionBarActivity implements OnMapReadyCal
 
     private void setUpMap() {
         mMap.setMyLocationEnabled(true);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(35.469561, 139.599325), 10));
         mMap.setOnInfoWindowClickListener(MapConfigurer.getOnInfoWindowClickListener(this));
     }
 
