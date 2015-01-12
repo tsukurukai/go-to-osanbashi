@@ -28,6 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_margin="8dp"
+            android:textSize="@dimen/textsize_button"
             android:text="@string/button_course_1">
         </Button>
         <Button
@@ -37,6 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_margin="8dp"
+            android:textSize="@dimen/textsize_button"
             android:text="@string/button_course_2">
         </Button>
         <Button
@@ -46,6 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_margin="8dp"
+            android:textSize="@dimen/textsize_button"
             android:text="@string/button_course_3">
         </Button>
     </LinearLayout>
@@ -70,7 +73,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:textColor="@color/white"
-        android:textSize="24sp"
+        android:textSize="@dimen/textsize_large_button"
         android:layout_marginBottom="16dp"
         android:layout_marginRight="16dp"/>
 
