@@ -42,23 +42,13 @@ public class Spot {
     public static Spot fromJson(String json) {
         try {
             JSONObject jsonObject = new JSONObject(json);
-//            JSONArray jsonArray = jsonObject.getJSONArray("types");
-//            String[] types = new String[jsonArray.length()];
-//            for (int i = 0; i < jsonArray.length(); i++) {
-//                types[i] = jsonArray.getString(i);
-//            }
-//            return new Spot(
-//                    jsonObject.getString("formattedAddress")
-//                    ,jsonObject.getDouble("lat")
-//                    ,jsonObject.getDouble("lon")
-//                    ,jsonObject.getString("icon")
-//                    ,jsonObject.getString("id")
-//                    ,jsonObject.getString("name")
-//                    ,jsonObject.getDouble("rating")
-//                    ,jsonObject.getString("reference")
-//                    ,types
-//            );
-            return new Spot(jsonObject.getString("name"), jsonObject.getDouble("lat"), jsonObject.getDouble("lon"));
+            if ( jsonObject.has("rating") && jsonObject.has("icon")) {
+                return new Spot(jsonObject.getString("name"), jsonObject.getDouble("lat"),
+                        jsonObject.getDouble("lon"), jsonObject.getString("icon"),
+                        jsonObject.getDouble("rating"));
+            } else {
+                return new Spot(jsonObject.getString("name"), jsonObject.getDouble("lat"), jsonObject.getDouble("lon"));
+            }
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -68,6 +58,14 @@ public class Spot {
         this.lat = lat;
         this.lon = lon;
         this.name = name;
+    }
+
+    public Spot(String name, double lat, double lon, String icon, double rating) {
+        this.lat = lat;
+        this.lon = lon;
+        this.name = name;
+        this.icon = icon;
+        this.rating = rating;
     }
 
     public Spot(String formattedAddress, double lat, double lon, String icon, String id,
@@ -93,6 +91,14 @@ public class Spot {
 
     public double getLon() {
         return lon;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public String getIcon() {
+        return icon;
     }
 
     public String toJson() {
@@ -194,10 +200,16 @@ public class Spot {
         for (int j = 0; j < results.length(); j++) {
             JSONObject result = results.getJSONObject(j);
             JSONArray typeArray = result.getJSONArray("types");
-            String lat = result.getJSONObject("geometry").getJSONObject("location").getString("lat");
-            String lng = result.getJSONObject("geometry").getJSONObject("location").getString("lng");
-            if (!isBlackListedSpot(typeArray) && isInYokohama(valueOf(lat),valueOf(lng))) {
-                spots.add(new Spot(result.getString("name"), valueOf(lat), valueOf(lng)));
+            Double lat = result.getJSONObject("geometry").getJSONObject("location").getDouble("lat");
+            Double lng = result.getJSONObject("geometry").getJSONObject("location").getDouble("lng");
+            String icon = result.getString("icon");
+            if (!isBlackListedSpot(typeArray) && isInYokohama(lat,lng)) {
+                if (result.has("rating")) {
+                    Double rating = result.getDouble("rating");
+                    spots.add(new Spot(result.getString("name"), lat, lng, icon, rating));
+                } else {
+                    spots.add(new Spot(result.getString("name"), lat, lng));
+                }
                 spotCount++;
             }
         }

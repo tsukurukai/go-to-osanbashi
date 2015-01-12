@@ -33,7 +33,13 @@ public class MapConfigurer {
 
     public static void addMarker(GoogleMap map, List<Spot> spots) {
         for (Spot spot: spots) {
-            map.addMarker(new MarkerOptions().position(new LatLng(spot.getLat(), spot.getLon())).title(spot.getName()));
+            MarkerOptions options = new MarkerOptions().position(new LatLng(spot.getLat(), spot.getLon()))
+                    .title(spot.getName());
+            Double rating = spot.getRating();
+            if ( rating > 0.0 ) {
+                        options.snippet("評価: " + rating);
+            }
+            map.addMarker(options);
         }
     }
 
