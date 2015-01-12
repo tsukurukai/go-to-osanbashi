@@ -12,10 +12,11 @@
     <string name="button_history">Browse your history</string>
     <string name="button_select_course">Go Now</string>
 
-    <string name="text_top_page_header">Road to Osanbashi!</string>
+    <string name="text_top_page_header">Road to Osanbashi</string>
     <string name="text_your_location">Your location</string>
     <string name="text_osanbashi">Osanbashi</string>
     <string name="text_loading">Searching courses...</string>
 
     <string name="error_msg_cannot_connect_server">Unable to connect to server. Please try again later.</string>
+    <string name="text_rating">Rating</string>
 </resources>

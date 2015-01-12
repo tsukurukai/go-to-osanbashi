@@ -115,7 +115,7 @@ public class SavedMapActivity extends ActionBarActivity implements OnMapReadyCal
     @Override
     public void onMapReady(GoogleMap googleMap) {
         googleMap.clear();
-        MapConfigurer.addMarker(mMap, spots);
+        MapConfigurer.addMarker(mMap, spots, getResources());
         MapConfigurer.addPolyLineOptions(mMap, spots);
         MapConfigurer.moveCamera(mMap, spots);
     }

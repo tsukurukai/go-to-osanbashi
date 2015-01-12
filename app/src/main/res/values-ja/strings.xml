@@ -3,7 +3,7 @@
 
     <string name="app_name">大さん橋へ行こう！</string>
     <string name="title_activity_maps">コースを選ぶ</string>
-    <string name="title_activity_savedmap">大さん橋へ向かう</string>
+    <string name="title_activity_savedmap">大さん橋へのコース</string>
 
     <string name="button_course_1">コース１</string>
     <string name="button_course_2">コース２</string>
@@ -18,4 +18,5 @@
     <string name="text_loading">コース検索中...</string>
 
     <string name="error_msg_cannot_connect_server">サーバーに接続できませんでした。時間をおいて再度試してください。</string>
+    <string name="text_rating">評価</string>
 </resources>

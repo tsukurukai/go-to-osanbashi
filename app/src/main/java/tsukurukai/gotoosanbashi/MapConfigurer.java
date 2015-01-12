@@ -2,6 +2,7 @@ package tsukurukai.gotoosanbashi;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.location.Location;
 import android.net.Uri;
 import android.util.Pair;
@@ -31,13 +32,13 @@ public class MapConfigurer {
         };
     }
 
-    public static void addMarker(GoogleMap map, List<Spot> spots) {
+    public static void addMarker(GoogleMap map, List<Spot> spots, Resources resources) {
         for (Spot spot: spots) {
             MarkerOptions options = new MarkerOptions().position(new LatLng(spot.getLat(), spot.getLon()))
                     .title(spot.getName());
             Double rating = spot.getRating();
             if ( rating > 0.0 ) {
-                options.snippet("評価: " + rating);
+                options.snippet(resources.getString(R.string.text_rating) +": " + rating);
             }
             map.addMarker(options);
         }

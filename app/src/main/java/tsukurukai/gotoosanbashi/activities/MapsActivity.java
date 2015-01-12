@@ -3,6 +3,7 @@ package tsukurukai.gotoosanbashi.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -216,7 +217,7 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         googleMap.clear();
-        MapConfigurer.addMarker(mMap, spots);
+        MapConfigurer.addMarker(mMap, spots, getResources());
         MapConfigurer.addPolyLineOptions(mMap, spots);
         MapConfigurer.moveCamera(mMap, spots);
     }
