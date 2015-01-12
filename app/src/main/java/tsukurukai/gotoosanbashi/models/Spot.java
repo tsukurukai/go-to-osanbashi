@@ -119,8 +119,8 @@ public class Spot {
     private static final int MAXIMUM_REQUEST_COUNT = 5;
     private static final int NUMBER_OF_SPOTS = 4;
 
-    public static ArrayList<Spot> findByLocation(Location location) {
-            ArrayList<Spot> spots = new ArrayList<Spot>();
+    public static ArrayList<Spot> findByLocation(Location location) throws IOException, JSONException {
+            ArrayList<Spot> spots = new ArrayList<>();
 
             Double currentLat = location.getLatitude();
             Double currentLng = location.getLongitude();
@@ -154,25 +154,19 @@ public class Spot {
                     HttpResponse httpResponse;
                     HttpClient httpClient = new DefaultHttpClient();
                     requestCount++;
-                    try {
-                        httpResponse = httpClient.execute(request);
-                        int status = httpResponse.getStatusLine().getStatusCode();
-                        if (HttpStatus.SC_OK == status) {
-                            JSONObject json = new JSONObject(EntityUtils.toString(httpResponse.getEntity()));
-                            JSONArray results = json.getJSONArray("results");
-                            if (json.has("next_page_token")) {
-                                pageToken = "&pagetoken=" + json.getString("next_page_token");
-                                spotCount += addSpots(spots, results);
-                            } else {
-                                hasNext = false;
-                            }
+                    httpResponse = httpClient.execute(request);
+                    int status = httpResponse.getStatusLine().getStatusCode();
+                    if (HttpStatus.SC_OK == status) {
+                        JSONObject json = new JSONObject(EntityUtils.toString(httpResponse.getEntity()));
+                        JSONArray results = json.getJSONArray("results");
+                        if (json.has("next_page_token")) {
+                            pageToken = "&pagetoken=" + json.getString("next_page_token");
+                            spotCount += addSpots(spots, results);
                         } else {
-                            Log.d("HttpStatus", "HTTP_Status: " + status);
+                            hasNext = false;
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    } else {
+                        throw new IOException("HTTP Status: " + status);
                     }
                 }
             }

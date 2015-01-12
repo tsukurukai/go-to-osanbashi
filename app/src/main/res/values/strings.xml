@@ -16,4 +16,6 @@
     <string name="text_your_location">Your location</string>
     <string name="text_osanbashi">Osanbashi</string>
     <string name="text_loading">Loading...</string>
+
+    <string name="error_msg_cannot_connect_server">Can\'t connect server. Please try agein later.</string>
 </resources>

@@ -17,7 +17,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,40 +89,53 @@ public class MainActivity extends FragmentActivity {
                         @Override
                         public void onLocationChanged(final Location location) {
 
-                            new AsyncTask<Void, Void, Void>() {
+                            new AsyncTask<Void, Void, ArrayList<Spot>>() {
                                 @Override
-                                protected Void doInBackground(Void... params) {
-                                    ArrayList<Spot> spots = Spot.findByLocation(location);
-                                    Spot start = new Spot(getResources().getString(R.string.text_your_location), location.getLatitude(), location.getLongitude());
-                                    Spot goal = new Spot(getResources().getString(R.string.text_osanbashi), Const.GOAL_LATITUDE, Const.GOAL_LONGITUDE);
-
-                                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences("data", getActivity().MODE_PRIVATE);
-
-                                    for (int i = 0; i < 3; i++) {
-                                        List<Spot> course = CourseCalculator.calculate(spots, 3, start, goal);
-                                        for (int j = 0; j < course.size(); j++) {
-                                            sharedPreferences
-                                                    .edit()
-                                                    .putString("course:" + i + ":spots:" + j, course.get(j).toJson())
-                                                    .apply();
-                                        }
-                                        sharedPreferences
-                                                .edit()
-                                                .putInt("course:" + i + ":spotsCount", course.size())
-                                                .commit();
+                                protected ArrayList<Spot> doInBackground(Void... params) {
+                                    ArrayList<Spot> spots;
+                                    try {
+                                        spots = Spot.findByLocation(location);
+                                    } catch (IOException | JSONException e) {
+                                        spots = null;
                                     }
-
-                                    if (loadingDialogFragment != null && loadingDialogFragment.getDialog() != null) {
-                                        loadingDialogFragment.getDialog().dismiss();
-                                    }
-                                    return null;
+                                    return spots;
                                 }
 
                                 @Override
-                                protected void onPostExecute(Void aVoid) {
-                                    super.onPostExecute(aVoid);
-                                    Intent intent = MapsActivity.createIntent(getActivity());
-                                    startActivity(intent);
+                                protected void onPostExecute(ArrayList<Spot> spots) {
+                                    if (loadingDialogFragment != null && loadingDialogFragment.getDialog() != null) {
+                                        loadingDialogFragment.getDialog().dismiss();
+                                    }
+
+                                    if (spots != null && spots.size() > 0) {
+                                        Spot start = new Spot(getResources().getString(R.string.text_your_location), location.getLatitude(), location.getLongitude());
+                                        Spot goal = new Spot(getResources().getString(R.string.text_osanbashi), Const.GOAL_LATITUDE, Const.GOAL_LONGITUDE);
+
+                                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("data", getActivity().MODE_PRIVATE);
+
+                                        for (int i = 0; i < 3; i++) {
+                                            List<Spot> course = CourseCalculator.calculate(spots, 3, start, goal);
+                                            for (int j = 0; j < course.size(); j++) {
+                                                sharedPreferences
+                                                        .edit()
+                                                        .putString("course:" + i + ":spots:" + j, course.get(j).toJson())
+                                                        .apply();
+                                            }
+                                            sharedPreferences
+                                                    .edit()
+                                                    .putInt("course:" + i + ":spotsCount", course.size())
+                                                    .commit();
+                                        }
+
+                                        Intent intent = MapsActivity.createIntent(getActivity());
+                                        startActivity(intent);
+
+                                    } else {
+                                        Toast.makeText(
+                                                getActivity(),
+                                                getResources().getString(R.string.error_msg_cannot_connect_server),
+                                                Toast.LENGTH_LONG).show();
+                                    }
                                 }
                             }.execute();
                         }
