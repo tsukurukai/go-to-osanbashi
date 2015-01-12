@@ -18,14 +18,13 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import tsukurukai.gotoosanbashi.Const;
 import tsukurukai.gotoosanbashi.Secret;
 import tsukurukai.gotoosanbashi.Util;
-
-import static java.lang.Double.valueOf;
 
 public class Spot {
 
@@ -185,7 +184,7 @@ public class Spot {
         String whiteList = Const.SPOT_TYPE_WHITE_LIST;
         String radius   = "&radius=" + String.valueOf(distance);
         String sensor   = "&sensor=false";
-        String option   = "&language=ja";
+        String option   = "&language=" + getLocale();
         String uri = baseUri + key + radius + sensor + option;
         try {
             uri += "&types=" + URLEncoder.encode(whiteList, "utf-8");
@@ -193,6 +192,14 @@ public class Spot {
             throw new RuntimeException(e);
         }
         return uri;
+    }
+
+    private static String getLocale() {
+        if (Locale.JAPAN.equals(Locale.getDefault())) {
+            return "ja";
+        } else {
+            return "en";
+        }
     }
 
     private static int addSpots(ArrayList<Spot> spots, JSONArray results) throws JSONException {

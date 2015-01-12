@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Go to Osanbashi！</string>
+    <string name="app_name">Road to Osanbashi</string>
     <string name="title_activity_maps">Choose your course</string>
-    <string name="title_activity_savedmap">Headed to the Osanbashi</string>
+    <string name="title_activity_savedmap">Course to Osanbashi</string>
 
-    <string name="button_course_1">Cource 1</string>
-    <string name="button_course_2">Cource 2</string>
-    <string name="button_course_3">Cource 3</string>
+    <string name="button_course_1">Course 1</string>
+    <string name="button_course_2">Course 2</string>
+    <string name="button_course_3">Course 3</string>
     <string name="button_start">Start</string>
-    <string name="button_history">Continue</string>
-    <string name="button_select_cource">OK</string>
+    <string name="button_history">Browse your history</string>
+    <string name="button_select_course">Go Now</string>
 
-    <string name="text_top_page_header">Go to Osanbashi!</string>
+    <string name="text_top_page_header">Road to Osanbashi!</string>
     <string name="text_your_location">Your location</string>
     <string name="text_osanbashi">Osanbashi</string>
-    <string name="text_loading">Loading...</string>
+    <string name="text_loading">Searching courses...</string>
 
-    <string name="error_msg_cannot_connect_server">Can\'t connect server. Please try agein later.</string>
+    <string name="error_msg_cannot_connect_server">Unable to connect to server. Please try again later.</string>
 </resources>

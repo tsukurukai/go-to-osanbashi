@@ -37,7 +37,7 @@ public class MapConfigurer {
                     .title(spot.getName());
             Double rating = spot.getRating();
             if ( rating > 0.0 ) {
-                        options.snippet("評価: " + rating);
+                options.snippet("評価: " + rating);
             }
             map.addMarker(options);
         }
