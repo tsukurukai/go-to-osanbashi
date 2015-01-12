@@ -98,7 +98,7 @@ public class MainActivity extends FragmentActivity {
                                         centerLocation.setLatitude(Const.YOKOHAMA_CENTER_LATITUDE);
                                         centerLocation.setLongitude(Const.YOKOHAMA_CENTER_LONGITUDE);
 
-                                        Location randomLocation = Spot.getRandomCurrentLocation(centerLocation);
+                                        Location randomLocation = Util.getRandomLocation(centerLocation);
                                         spots = Spot.findByLocation(randomLocation);
                                     } catch (IOException | JSONException e) {
                                         spots = null;

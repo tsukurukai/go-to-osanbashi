@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.util.Pair;
 
+import java.util.Random;
+
 public class Util {
     public static Pair<Double, Double> betweenLatLng(double startLat, double startLng, double goalLat, double goalLng, int index, int allCount) {
         Double spotLat = ( startLat * index / allCount ) + ( goalLat * (allCount - index) / allCount );
@@ -32,4 +34,33 @@ public class Util {
         }
         return versionName;
     }
+
+    public static Location getRandomLocation(Location location) {
+        Double latitude = location.getLatitude();
+        Double longitude = location.getLongitude();
+
+        Random random = new Random();
+
+        Double randomLatitude = random.nextDouble() * 0.187;
+        Double randomLongitude = random.nextDouble() * 0.240;
+
+        if (random.nextBoolean()) {
+            latitude += randomLatitude;
+        } else {
+            latitude -= randomLatitude;
+        }
+
+        if (random.nextBoolean()) {
+            longitude += randomLongitude;
+        } else {
+            longitude -= randomLongitude;
+        }
+
+        Location randomLocation = new Location("random");
+        randomLocation.setLatitude(latitude);
+        randomLocation.setLongitude(longitude);
+
+        return randomLocation;
+    }
+
 }
