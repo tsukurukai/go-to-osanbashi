@@ -7,4 +7,5 @@
     <dimen name="textsize_large_button">24sp</dimen>
     <dimen name="textsize_headline">24sp</dimen>
     <dimen name="textsize_display1">34sp</dimen>
+    <dimen name="textsize_listitem_text">16sp</dimen>
 </resources>

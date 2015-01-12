@@ -6,21 +6,11 @@
     >
 
     <TextView
-        android:text="@+id/course_order"
-        android:id="@+id/course_order"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="16dp" />
-
-    <TextView
         android:text="@+id/course_title"
         android:id="@+id/course_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="16dp" />
+        android:textSize="@dimen/textsize_listitem_text"
+        android:layout_margin="16dp" />
 
 </LinearLayout>

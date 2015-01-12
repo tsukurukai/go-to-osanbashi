@@ -136,14 +136,11 @@ public class HistoryListActivity extends ActionBarActivity {
                 convertView = inflater.inflate(R.layout.listitem_courses, null);
             }
 
-            TextView orderView = (TextView)convertView.findViewById(R.id.course_order);
-            orderView.setText(Integer.toString(position + 1));
-
             String title = new String();
             TextView courseTitle = (TextView)convertView.findViewById(R.id.course_title);
             for (int i = 1; i < 5; i++) {
                 if (i > 1) {
-                    title += System.lineSeparator() + " → ︎";
+                    title += "\n → ︎";
                 }
                 Spot spot = courseDataList.get(position).getSpots().get(i);
                 title += spot.getName();
@@ -153,9 +150,6 @@ public class HistoryListActivity extends ActionBarActivity {
 
             return convertView;
         }
-
-
-
     }
 
     private static class CourseData {
