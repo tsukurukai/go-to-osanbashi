@@ -100,7 +100,12 @@ public class HistoryListActivity extends ActionBarActivity {
         @Override
         public void onListItemClick(ListView l, View v, int position, long id) {
             super.onListItemClick(l, v, position, id);
-            Intent intent = SavedMapActivity.createIntent(getActivity(), position);
+
+            SharedPreferences saveCourseSharedPreferences = getActivity().getSharedPreferences("saved_courses", MODE_PRIVATE);
+            int savedCourseCount = saveCourseSharedPreferences.getInt("saved_course_count", 0);
+            int descendingOrder = savedCourseCount - position - 1;
+
+            Intent intent = SavedMapActivity.createIntent(getActivity(), descendingOrder);
             startActivity(intent);
         }
     }
@@ -121,12 +126,14 @@ public class HistoryListActivity extends ActionBarActivity {
 
         @Override
         public CourseData getItem(int position) {
-            return courseDataList.get(position);
+            int descendingOrder = courseDataList.size() - position - 1;
+            return courseDataList.get(descendingOrder);
         }
 
         @Override
         public long getItemId(int position) {
-            return courseDataList.get(position).getOrder();
+            int descendingOrder = courseDataList.size() - position - 1;
+            return descendingOrder;
         }
 
         @Override
@@ -142,7 +149,8 @@ public class HistoryListActivity extends ActionBarActivity {
                 if (i > 1) {
                     title += "\n → ︎";
                 }
-                Spot spot = courseDataList.get(position).getSpots().get(i);
+                int descendingOrder = courseDataList.size() - position - 1;
+                Spot spot = courseDataList.get(descendingOrder).getSpots().get(i);
                 title += spot.getName();
 
                 courseTitle.setText(title);
