@@ -23,10 +23,12 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import tsukurukai.gotoosanbashi.activities.HistoryListActivity;
 import tsukurukai.gotoosanbashi.activities.MapsActivity;
+import tsukurukai.gotoosanbashi.activities.TopPageBackground;
 import tsukurukai.gotoosanbashi.fragments.LoadingDialogFragment;
 import tsukurukai.gotoosanbashi.models.CourseCalculator;
 import tsukurukai.gotoosanbashi.models.Spot;
@@ -76,6 +78,8 @@ public class MainActivity extends FragmentActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            ViewGroup layout = (ViewGroup)rootView.findViewById(R.id.top_page_layout);
+            layout.setBackground(TopPageBackground.getImageByTime(getActivity(), new Date()));
             linkMapTextView = (TextView)rootView.findViewById(R.id.link_map);
             linkMapTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
