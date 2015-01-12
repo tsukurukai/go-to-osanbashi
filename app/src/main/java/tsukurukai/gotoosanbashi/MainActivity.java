@@ -88,7 +88,13 @@ public class MainActivity extends FragmentActivity {
                             new AsyncTask<Void, Void, Void>() {
                                 @Override
                                 protected Void doInBackground(Void... params) {
-                                    ArrayList<Spot> spots = Spot.findByLocation(location);
+                                    Location goalLocation = new Location("yokohama_center");
+                                    goalLocation.setLatitude(Const.YOKOHAMA_CENTER_LATITUDE);
+                                    goalLocation.setLongitude(Const.YOKOHAMA_CENTER_LONGITUDE);
+
+                                    Location randomLocation = Spot.getRandomCurrentLocation(goalLocation);
+                                    ArrayList<Spot> spots = Spot.findByLocation(randomLocation);
+
                                     Spot start = new Spot(getResources().getString(R.string.text_your_location), location.getLatitude(), location.getLongitude());
                                     Spot goal = new Spot(getResources().getString(R.string.text_osanbashi), Const.GOAL_LATITUDE, Const.GOAL_LONGITUDE);
 

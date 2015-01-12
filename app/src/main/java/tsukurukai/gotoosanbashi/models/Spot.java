@@ -16,8 +16,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -118,6 +120,34 @@ public class Spot {
     private static final int MAXIMUM_DISTANCE = 10000;
     private static final int MAXIMUM_REQUEST_COUNT = 5;
     private static final int NUMBER_OF_SPOTS = 4;
+
+    public static Location getRandomCurrentLocation(Location location) {
+        Double latitude = location.getLatitude();
+        Double longitude = location.getLongitude();
+
+        Random random = new Random();
+
+        Double randomLatitude = random.nextDouble() * 0.187;
+        Double randomLongitude = random.nextDouble() * 0.240;
+
+        if (random.nextBoolean()) {
+            latitude += randomLatitude;
+        } else {
+            latitude -= randomLatitude;
+        }
+
+        if (random.nextBoolean()) {
+            longitude += randomLongitude;
+        } else {
+            longitude -= randomLongitude;
+        }
+
+        Location randomLocation = new Location("random");
+        randomLocation.setLatitude(latitude);
+        randomLocation.setLongitude(longitude);
+
+        return randomLocation;
+    }
 
     public static ArrayList<Spot> findByLocation(Location location) {
             ArrayList<Spot> spots = new ArrayList<Spot>();
