@@ -1,24 +1,8 @@
 # go-to-osanbashi #
 
-## 絶対欲しい機能 ##
+横浜を楽しむためのAndroidアプリです！
 
-1. 神奈川県外問題（satot）
-	- 横浜アプリなので、横浜のスポットを紹介したい。
-	- 理想は距離に応じて、新幹線か飛行機を自動選択する。
-	- 観光名所は横浜市内にしぼる
-		- パターン1, 現在地からの直近スポットから引く
-1. スポットはレストランを抜く。（satot）
-1. ディテール問題（bati11）
-	- 詳細はgoogle検索に飛ばす
-1. 決定機能　＋　保存したコースを復元。（trtraki）
-1. アイコン作成（bati11）
-1. 写真撮影（全員）
-1. google play作業（satot）
-1. アプリ用紹介文（trtraki)
-1. アプリ用紹介文（trtraki）
+<a href="https://play.google.com/store/apps/details?id=tsukurukai.gotoosanbashi">
+  <img alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_60.png" />
+</a>
 
-## 出来たら ##
-1. 履歴機能が欲しい。
-1. スポット毎の時間を表示したい。
-1. コースでtypeをしぼる。（美術館コース等）
-1. リフレッシュ機能
